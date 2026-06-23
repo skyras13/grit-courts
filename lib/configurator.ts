@@ -103,6 +103,19 @@ export function toLeadCourtType(t: ConfigCourtType): LeadCourtType {
   return t === 'multisport' ? 'multi-sport' : t;
 }
 
+/** Human description of the configured surface + add-ons, for the AI render prompt. */
+export function designDetail(c: CourtConfig): string {
+  const pal = PALETTES[c.paletteIdx]!;
+  const size = SIZES.find((z) => z.key === c.size)?.hint ?? '';
+  const addons: string[] = [];
+  if (c.acc.fence) addons.push('perimeter fencing');
+  if (c.acc.lights) addons.push('LED light poles');
+  if (c.acc.hoop) addons.push('an adjustable basketball hoop');
+  if (c.acc.rebound) addons.push('a rebound wall');
+  const addonStr = addons.length ? ` with ${addons.join(', ')}` : '';
+  return `${pal.name} surfacing — a vibrant ${pal.play} playing surface with a darker ${pal.surround} surround and crisp white regulation lines${addonStr}${size ? `, ${size}` : ''}.`;
+}
+
 export function configSummary(c: CourtConfig): { k: string; v: string }[] {
   const type = COURT_TYPES.find((t) => t.key === c.courtType)!;
   const size = SIZES.find((z) => z.key === c.size)!;

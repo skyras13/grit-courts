@@ -4,30 +4,31 @@ import { COMPANY } from '@/lib/site';
 
 const COLS: { title: string; links: { label: string; href: string }[] }[] = [
   {
-    title: 'Courts',
+    title: 'Build',
     links: [
-      { label: 'Pickleball', href: '/services/pickleball' },
-      { label: 'Basketball', href: '/design' },
-      { label: 'Multi-sport', href: '/design' },
-      { label: 'Resurfacing', href: '/#build' },
+      { label: 'Build a Court', href: '/design' },
+      { label: 'Court Surfacing', href: '/court-surfacing' },
+      { label: 'Court Repair', href: '/contact' },
+      { label: 'Coatings Products', href: '/coatings' },
+      { label: 'All Services', href: '/services' },
     ],
   },
   {
-    title: 'Backyard',
+    title: 'Explore',
     links: [
-      { label: 'Pools', href: '/#build' },
-      { label: 'Concrete', href: '/#build' },
-      { label: 'Fencing', href: '/#build' },
-      { label: 'Landscaping & turf', href: '/#build' },
+      { label: 'Court Designer', href: '/design' },
+      { label: 'See Your Yard', href: '/preview' },
+      { label: 'Gallery', href: '/gallery' },
+      { label: 'Service Area', href: '/service-area' },
     ],
   },
   {
     title: 'Company',
     links: [
-      { label: 'Gallery', href: '/gallery' },
-      { label: 'Service area', href: '/service-area' },
       { label: 'About', href: '/about' },
-      { label: 'Design in 3D', href: '/design' },
+      { label: 'Contact Us', href: '/contact' },
+      { label: 'Trade Partners', href: '/trade-partners' },
+      { label: 'Warranty Agreement', href: '/warranty' },
     ],
   },
 ];

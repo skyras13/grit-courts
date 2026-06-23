@@ -13,6 +13,8 @@ import { buildPrompt, NEGATIVE_PROMPT, PROMPT_STRENGTH } from './prompt';
 export interface RenderRequest {
   imageUrl: string;
   courtType: CourtType;
+  /** Extra design detail (colors, size, add-ons) appended to the prompt. */
+  detail?: string;
 }
 
 export interface RenderResult {
@@ -39,10 +41,10 @@ export class RenderError extends Error {
  *  are self-contained local SVGs (no network, never 404). Replace with the
  *  owner's real AI renders / job photos for production. */
 export const SAMPLE_RENDERS: Record<CourtType, string> = {
-  pickleball: '/samples/court-pickleball.svg',
-  basketball: '/samples/court-basketball.svg',
-  'multi-sport': '/samples/court-multisport.svg',
-  epoxy: '/samples/court-epoxy.svg',
+  pickleball: '/photos/court-05.jpg',
+  basketball: '/photos/court-01.jpg',
+  'multi-sport': '/photos/poh-24.jpg',
+  epoxy: '/photos/epoxy-1.jpg',
 };
 
 async function renderWithReplicate(req: RenderRequest, prompt: string): Promise<RenderResult> {
@@ -152,7 +154,7 @@ async function renderWithMock(req: RenderRequest, prompt: string): Promise<Rende
 }
 
 export async function renderCourt(req: RenderRequest): Promise<RenderResult> {
-  const prompt = buildPrompt(req.courtType);
+  const prompt = buildPrompt(req.courtType, req.detail);
   switch (env.RENDER_PROVIDER) {
     case 'replicate':
       return renderWithReplicate(req, prompt);

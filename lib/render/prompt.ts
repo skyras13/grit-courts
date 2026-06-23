@@ -17,12 +17,20 @@ const SURFACING: Record<CourtType, string> = {
     'a high-end residential decorative flake epoxy floor with a glossy clear topcoat and a clean, level finish',
 };
 
-export function buildPrompt(courtType: CourtType): string {
+/**
+ * Builds the image-to-image prompt. `detail` carries the configured design
+ * (surface colors, size, add-ons) from the court designer so the generated court
+ * matches what the visitor built. The structure-preservation language keeps their
+ * actual yard, house, and perspective intact.
+ */
+export function buildPrompt(courtType: CourtType, detail?: string): string {
   return (
     `A photorealistic, perfectly level, ${SURFACING[courtType]}, ` +
-    `installed cleanly into this exact space. Preserve the original house, fence, ` +
-    `trees, landscaping, lighting conditions, shadows, and camera perspective exactly. ` +
-    `Natural daylight, sharp focus, architectural visualization quality.`
+    `installed cleanly into this exact backyard. ` +
+    (detail ? `${detail} ` : '') +
+    `Preserve the original house, fence, trees, landscaping, lighting conditions, ` +
+    `shadows, and camera perspective exactly. Natural daylight, sharp focus, ` +
+    `architectural visualization quality.`
   );
 }
 

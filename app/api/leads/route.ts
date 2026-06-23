@@ -66,7 +66,7 @@ export async function POST(request: Request) {
       court_size: input.courtSize ?? null,
       land_condition: input.landCondition ?? null,
       full_name: input.fullName,
-      phone: input.phone,
+      phone: input.phone || '',
       email: input.email || null,
       property_address: input.propertyAddress || null,
       estimated_min: estimate?.min ?? input.estimatedMin ?? null,
@@ -75,7 +75,8 @@ export async function POST(request: Request) {
       render_id: input.renderId ?? null,
       sms_consent: input.smsConsent,
       sms_consent_at: input.smsConsent ? new Date().toISOString() : null,
-      utm: input.utm ?? {},
+      // Fold any free-text message (contact/warranty forms) into utm metadata.
+      utm: { ...(input.utm ?? {}), ...(input.message ? { message: input.message } : {}) },
       fbc,
       fbp,
       source: input.source,

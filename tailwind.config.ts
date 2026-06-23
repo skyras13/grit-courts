@@ -13,23 +13,26 @@ const config: Config = {
       colors: {
         cream: '#f4f2ee',
         paper: '#ffffff',
-        ink: '#15211b',
-        slate: { 950: '#0e1813', 900: '#15211b', 800: '#1b2922' },
-        // Forest-green brand scale, sampled from the real GRIT Courts logo
-        // (logo = charcoal mountains + green court). 600 is the primary accent.
+        ink: '#16212f',
+        slate: { 950: '#0d1d2e', 900: '#16212f', 800: '#1b2530' },
+        // Navy action color — matches the live site's "Get a Quote" button (#2b598a).
         brand: {
-          50: '#edf6f0',
-          100: '#d6ecdf',
-          200: '#aed8c1',
-          300: '#79bd98',
-          400: '#46a06f',
-          500: '#2f865a',
-          600: '#27704a',
-          700: '#1f5a3b',
-          800: '#1b4a31',
-          900: '#173d29',
+          50: '#eaf1f8',
+          100: '#d9e6f3',
+          200: '#bcd4ea',
+          300: '#8fb6d9',
+          400: '#5b86b0',
+          500: '#3a6ea0',
+          600: '#2b598a',
+          700: '#21466e',
+          800: '#1d3c5d',
+          900: '#1a3350',
         },
-        sky: { accent: '#7fc6a3' }, // light green used on dark sections
+        // Forest green from the GRIT logo — secondary accent (logo wordmark, ticks).
+        grit: { 500: '#3d8a64', 600: '#2f7250' },
+        // Orange — the Court Designer section labels on the live site.
+        accent: { DEFAULT: '#e0552e', 600: '#cc4a25' },
+        sky: { accent: '#7fb2dd' }, // light blue used on dark sections
         muted: {
           DEFAULT: '#5a6570',
           soft: '#7c8893',

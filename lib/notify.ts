@@ -25,7 +25,7 @@ function ownerEmailHtml({ lead, renderUrl, cityName }: NotifyContext): string {
       : '—';
   return `
     <div style="font-family:system-ui,sans-serif;max-width:560px">
-      <h2 style="color:#27704a">🏀 New GRIT Courts lead</h2>
+      <h2 style="color:#2b598a">🏀 New GRIT Courts lead</h2>
       <table style="width:100%;border-collapse:collapse">
         ${row('Name', lead.full_name)}
         ${row('Phone', `<a href="tel:${lead.phone}">${lead.phone}</a>`)}
@@ -75,7 +75,7 @@ async function sendHomeownerEmail(ctx: NotifyContext): Promise<void> {
     subject: 'Your GRIT Courts estimate — and a look at your court',
     html: `
       <div style="font-family:system-ui,sans-serif;max-width:560px">
-        <h2 style="color:#27704a">Thanks, ${ctx.lead.full_name.split(' ')[0]}!</h2>
+        <h2 style="color:#2b598a">Thanks, ${ctx.lead.full_name.split(' ')[0]}!</h2>
         <p>We got your request and a member of our team will reach out shortly to confirm
         the details and your free on-site design consult.</p>
         ${

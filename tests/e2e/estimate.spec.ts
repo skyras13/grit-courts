@@ -7,7 +7,7 @@ import { test, expect } from '@playwright/test';
 test('header free-estimate modal captures a lead', async ({ page }) => {
   await page.goto('/');
 
-  await page.getByRole('button', { name: 'Free estimate' }).first().click();
+  await page.getByRole('button', { name: 'Get a Quote Here!' }).first().click();
 
   const dialog = page.getByRole('dialog', { name: /estimate/i });
   await expect(dialog).toBeVisible();
@@ -21,7 +21,7 @@ test('header free-estimate modal captures a lead', async ({ page }) => {
 
 test('validation blocks an empty estimate submission', async ({ page }) => {
   await page.goto('/');
-  await page.getByRole('button', { name: 'Free estimate' }).first().click();
+  await page.getByRole('button', { name: 'Get a Quote Here!' }).first().click();
   const dialog = page.getByRole('dialog', { name: /estimate/i });
   await dialog.getByRole('button', { name: /Send me this estimate/i }).click();
   await expect(dialog.getByText(/add your name and a phone number or email/i)).toBeVisible();

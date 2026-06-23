@@ -10,7 +10,7 @@ import { cn } from '@/lib/utils';
 
 export function HomeHero() {
   const [variant, setVariant] = useState<'A' | 'B'>('A');
-  const [heroPal, setHeroPal] = useState(1); // default to Center Court Green (on-brand)
+  const [heroPal, setHeroPal] = useState(0); // default to Center Court Green (on-brand)
   const pal = PALETTES[heroPal]!;
 
   return (
@@ -65,7 +65,7 @@ export function HomeHero() {
               </div>
             </div>
           ) : (
-            <div className="relative overflow-hidden rounded-lg shadow-lift" style={{ aspectRatio: '4 / 3.2', background: 'linear-gradient(165deg,#15402e,#0c1d16)' }}>
+            <div className="relative overflow-hidden rounded-lg shadow-lift" style={{ aspectRatio: '4 / 3.2', background: 'linear-gradient(165deg,#13314c,#0c1d2e)' }}>
               <div className="absolute left-4 top-3.5 z-[4] text-[11px] font-bold uppercase tracking-[0.12em] text-white/60">Live 3D · drag to orbit</div>
               <Court3D courtType="pickleball" play={pal.play} surround={pal.surround} netOn fenceOn autoRotate showControls={false} />
               <div className="absolute bottom-3.5 left-4 z-[4] flex flex-wrap items-center gap-2.5">
@@ -79,7 +79,7 @@ export function HomeHero() {
                       aria-label={p.name}
                       onClick={() => setHeroPal(pi)}
                       className="h-7 w-7 rounded-md p-0"
-                      style={{ background: `linear-gradient(135deg,${p.play} 0 55%,${p.surround} 55% 100%)`, border: `2px solid ${sel ? '#fff' : 'rgba(255,255,255,0.3)'}`, boxShadow: sel ? '0 0 0 2px #7fc6a3' : 'none' }}
+                      style={{ background: `linear-gradient(135deg,${p.play} 0 55%,${p.surround} 55% 100%)`, border: `2px solid ${sel ? '#fff' : 'rgba(255,255,255,0.3)'}`, boxShadow: sel ? '0 0 0 2px #7fb2dd' : 'none' }}
                     />
                   );
                 })}

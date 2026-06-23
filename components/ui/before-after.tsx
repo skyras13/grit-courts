@@ -72,7 +72,7 @@ export function BeforeAfter({
         <div className="absolute inset-y-0 -ml-px w-0.5 bg-white shadow-[0_0_0_1px_rgba(0,0,0,0.18)]" />
         <div className="absolute top-1/2 flex h-10 w-10 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-white shadow-lift">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-            <path d="M9 7l-4 5 4 5M15 7l4 5-4 5" stroke="#27704a" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+            <path d="M9 7l-4 5 4 5M15 7l4 5-4 5" stroke="#2b598a" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
         </div>
       </div>

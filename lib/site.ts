@@ -26,7 +26,7 @@ export const COMPANY = {
   rating: { value: 4.8, count: 37 }, // ~4.8★ HomeAdvisor footprint; confirm exact count
   courtsBuilt: '20+', // from the live site
   foundingYear: 2018, // ASSUMPTION — owner to confirm
-  brandColor: '#27704a', // forest green sampled from the logo
+  brandColor: '#2b598a', // live-site action navy (logo accent is green)
   social: {
     facebook: 'https://www.facebook.com/builtwithgrit',
     instagram: 'https://www.instagram.com/builtwithgrit',

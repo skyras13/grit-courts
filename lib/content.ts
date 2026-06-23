@@ -38,16 +38,44 @@ export interface IndexService {
   href: string;
 }
 
-// Court-focused offerings only — what GRIT actually does (no pools/turf).
-export const INDEX_SERVICES: IndexService[] = [
-  { name: 'Indoor courts', hook: 'Garage, barn, and home-gym courts — climbing walls optional.', price: 'by project', href: '/design' },
-  { name: 'Court resurfacing', hook: 'Crack repair and a fresh tournament-grade acrylic surface.', price: 'from $6,000', href: '/design' },
-  { name: 'Epoxy flake floors', hook: 'Garages, shops, and patios that shine and last.', price: 'from $3,500', href: '/design' },
-  { name: 'Concrete & base prep', hook: 'Excavation and an engineered, reinforced slab built for play.', price: 'from $8/sq ft', href: '/design' },
-  { name: 'Fencing & netting', hook: 'Ball-containment fencing, windscreen, and pro net systems.', price: 'from $35/ft', href: '/design' },
-  { name: 'Court lighting', hook: 'LED pole lighting so the games go on after dark.', price: 'from $3,900', href: '/design' },
-  { name: 'Game lines & striping', hook: 'Hand-taped, regulation multi-game lines and logos.', price: 'by project', href: '/design' },
-].map((d, i) => ({ ...d, num: String(i + 4).padStart(2, '0') }));
+/**
+ * ALL_SERVICES — the full service list from builtwithgrit.com (every one is real;
+ * each has a real photo except pools, which uses a branded tile until the owner
+ * supplies one). Drives the /services index page; the home page features the
+ * three court services and lists the rest.
+ */
+export interface ServiceCard {
+  name: string;
+  hook: string;
+  href: string;
+  img: string | null;
+  featured?: boolean;
+}
+
+export const ALL_SERVICES: ServiceCard[] = [
+  { name: 'Build a Court', hook: 'Custom basketball, pickleball, and tennis courts built fast with premium materials.', href: '/design', img: '/photos/drone-1.jpg', featured: true },
+  { name: 'Court Surfacing', hook: 'Resurface old courts or install a new, pro-quality surface for peak play in Utah.', href: '/court-surfacing', img: '/photos/svc-surfacing.jpg', featured: true },
+  { name: 'Multi-Sport Courts', hook: 'Hoops, pickleball, and tennis lines on one shared, color-matched surface.', href: '/design', img: '/photos/poh-24.jpg', featured: true },
+  { name: 'Court Repair', hook: 'Restore cracked or damaged courts with expert repair for safe, long-lasting play.', href: '/contact', img: '/photos/svc-repair.jpg' },
+  { name: 'Sport Lines', hook: 'Crisp, professional game lines for basketball, pickleball, tennis, and more.', href: '/contact', img: '/photos/lines-2.jpg' },
+  { name: 'Fencing', hook: 'Durable court and yard fencing for security, privacy, and ball containment.', href: '/contact', img: '/photos/svc-fencing.jpg' },
+  { name: 'Epoxy', hook: 'Durable, seamless epoxy flooring for your garage, patio, or shop — built to last.', href: '/coatings', img: '/photos/epoxy-1.jpg' },
+  { name: 'Pools', hook: 'Custom in-ground pools designed and built for lasting beauty and family fun.', href: '/contact', img: null },
+  { name: 'Landscaping', hook: 'Transform your yard with expert landscaping for beauty, function, and curb appeal.', href: '/contact', img: '/photos/svc-landscaping.jpg' },
+  { name: 'Concrete Work', hook: 'Top-quality concrete pads, driveways, retaining walls, and patios built to last.', href: '/contact', img: '/photos/svc-concrete.jpg' },
+  { name: 'Trampolines', hook: 'In-ground trampolines installed for safe, fun play — perfect for Utah backyards.', href: '/contact', img: '/photos/svc-trampoline.jpg' },
+  { name: 'Parking Lot Striping', hook: 'Sharp parking-lot lines and curbing for a clean, organized, safe property.', href: '/contact', img: '/photos/svc-parking.jpg' },
+  { name: 'Golf Simulators', hook: 'Custom golf simulators in any space — we handle design, construction, and install.', href: '/contact', img: '/photos/svc-golf.jpg' },
+];
+
+// Home "what we build" list = everything past the three featured cards.
+export const INDEX_SERVICES: IndexService[] = ALL_SERVICES.filter((s) => !s.featured).map((s, i) => ({
+  num: String(i + 4).padStart(2, '0'),
+  name: s.name,
+  hook: s.hook,
+  price: '',
+  href: s.href,
+}));
 
 export interface WorkItem {
   title: string;

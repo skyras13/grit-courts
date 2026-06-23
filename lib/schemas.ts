@@ -15,14 +15,18 @@ const phoneSchema = z
 
 export const utmSchema = z.record(z.string(), z.string()).default({});
 
-export const leadSchema = z.object({
-  courtType: z.enum(COURT_TYPES).optional(),
-  courtSize: z.enum(COURT_SIZES).optional(),
-  landCondition: z.enum(LAND_CONDITIONS).optional(),
-  fullName: z.string().trim().min(2, 'Please enter your name').max(120),
-  phone: phoneSchema,
-  email: z.string().trim().email('Enter a valid email').optional().or(z.literal('')),
-  propertyAddress: z.string().trim().max(240).optional().or(z.literal('')),
+export const leadSchema = z
+  .object({
+    courtType: z.enum(COURT_TYPES).optional(),
+    courtSize: z.enum(COURT_SIZES).optional(),
+    landCondition: z.enum(LAND_CONDITIONS).optional(),
+    fullName: z.string().trim().min(2, 'Please enter your name').max(120),
+    // Phone OR email is required (estimator/previewer send phone; the contact &
+    // warranty forms send email + message). Enforced by the refine below.
+    phone: phoneSchema.optional().or(z.literal('')),
+    email: z.string().trim().email('Enter a valid email').optional().or(z.literal('')),
+    message: z.string().trim().max(2000).optional(),
+    propertyAddress: z.string().trim().max(240).optional().or(z.literal('')),
   citySlug: z.string().trim().max(120).optional(),
   renderId: z.string().uuid().optional(),
   // TCPA: must be explicitly true to trigger SMS automation; we store the timestamp.
@@ -31,10 +35,14 @@ export const leadSchema = z.object({
   estimatedMax: z.number().int().nonnegative().optional(),
   utm: utmSchema.optional(),
   // Meta click cookies — the client reads these and may send null when absent.
-  fbc: z.string().nullable().optional(),
-  fbp: z.string().nullable().optional(),
-  source: z.string().default('site'),
-});
+    fbc: z.string().nullable().optional(),
+    fbp: z.string().nullable().optional(),
+    source: z.string().default('site'),
+  })
+  .refine((v) => Boolean((v.phone && v.phone.length) || (v.email && v.email.length)), {
+    message: 'Add a phone number or email so we can reach you',
+    path: ['phone'],
+  });
 
 export type LeadInput = z.infer<typeof leadSchema>;
 
