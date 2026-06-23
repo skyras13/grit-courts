@@ -1,78 +1,70 @@
 import Link from 'next/link';
-import { Logo } from '@/components/brand/logo';
-import { Container } from '@/components/ui/layout';
-import { COMPANY, SERVICES } from '@/lib/site';
-import { publishedCities } from '@/lib/cities-data';
+import { Wordmark } from '@/components/brand/logo';
+import { COMPANY } from '@/lib/site';
+
+const COLS: { title: string; links: { label: string; href: string }[] }[] = [
+  {
+    title: 'Courts',
+    links: [
+      { label: 'Pickleball', href: '/services/pickleball' },
+      { label: 'Basketball', href: '/design' },
+      { label: 'Multi-sport', href: '/design' },
+      { label: 'Resurfacing', href: '/#build' },
+    ],
+  },
+  {
+    title: 'Backyard',
+    links: [
+      { label: 'Pools', href: '/#build' },
+      { label: 'Concrete', href: '/#build' },
+      { label: 'Fencing', href: '/#build' },
+      { label: 'Landscaping & turf', href: '/#build' },
+    ],
+  },
+  {
+    title: 'Company',
+    links: [
+      { label: 'Gallery', href: '/gallery' },
+      { label: 'Service area', href: '/service-area' },
+      { label: 'About', href: '/about' },
+      { label: 'Design in 3D', href: '/design' },
+    ],
+  },
+];
 
 export function Footer() {
-  const cities = publishedCities();
-  const year = 2026; // build-time constant; avoids hydration drift
-
   return (
-    <footer className="court-gradient mt-8 text-white">
-      <Container className="grid gap-10 py-14 sm:grid-cols-2 lg:grid-cols-4">
+    <footer className="bg-slate-900 px-5 pb-9 pt-14 text-[#cfd8e0] sm:px-7">
+      <div className="mx-auto grid max-w-content gap-9 sm:grid-cols-2 lg:grid-cols-[1.5fr_1fr_1fr_1fr]">
         <div>
-          <Logo inverted />
-          <p className="mt-4 max-w-xs text-sm leading-relaxed text-brand-100">
-            {COMPANY.tagline}. Designing and installing custom basketball, pickleball, and
-            multi-sport courts across the Wasatch Front.
+          <Wordmark inverted className="mb-4" />
+          <p className="mb-4 max-w-[300px] text-[13.5px] leading-relaxed text-muted-faint">
+            Utah’s custom court &amp; backyard builders. Provo and the Wasatch Front — designed,
+            built, and warrantied by one crew.
           </p>
-          <p className="mt-4 text-sm text-brand-100">
-            <a href={COMPANY.phoneHref} className="font-bold text-white hover:underline">
-              {COMPANY.phone}
-            </a>
-            <br />
-            {COMPANY.city}, {COMPANY.region}
-          </p>
+          <div className="text-[13.5px] text-[#aab4be]">
+            <a href={COMPANY.phoneHref} className="hover:text-white">{COMPANY.phone}</a> ·{' '}
+            <a href={`mailto:${COMPANY.email}`} className="hover:text-white">{COMPANY.email}</a>
+          </div>
         </div>
 
-        <nav aria-label="Services">
-          <h3 className="text-sm font-bold uppercase tracking-wider text-court-200">Services</h3>
-          <ul className="mt-4 space-y-2.5 text-sm">
-            {SERVICES.map((s) => (
-              <li key={s.slug}>
-                <Link href={`/#services`} className="text-brand-100 hover:text-white hover:underline">
-                  {s.name}
+        {COLS.map((col) => (
+          <nav key={col.title} aria-label={col.title}>
+            <div className="mb-4 text-[11px] font-bold uppercase tracking-[0.12em] text-[#6c7884]">{col.title}</div>
+            <div className="flex flex-col gap-2.5">
+              {col.links.map((l) => (
+                <Link key={l.label} href={l.href} className="text-[13.5px] text-[#aab4be] transition hover:text-white">
+                  {l.label}
                 </Link>
-              </li>
-            ))}
-          </ul>
-        </nav>
+              ))}
+            </div>
+          </nav>
+        ))}
+      </div>
 
-        <nav aria-label="Service area">
-          <h3 className="text-sm font-bold uppercase tracking-wider text-court-200">Service Area</h3>
-          <ul className="mt-4 grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
-            {cities.slice(0, 10).map((c) => (
-              <li key={c.slug}>
-                <Link href={`/utah/${c.slug}`} className="text-brand-100 hover:text-white hover:underline">
-                  {c.name}
-                </Link>
-              </li>
-            ))}
-            <li className="col-span-2 mt-1">
-              <Link href="/service-area" className="font-semibold text-white hover:underline">
-                All cities →
-              </Link>
-            </li>
-          </ul>
-        </nav>
-
-        <nav aria-label="Company">
-          <h3 className="text-sm font-bold uppercase tracking-wider text-court-200">Company</h3>
-          <ul className="mt-4 space-y-2.5 text-sm">
-            <li><Link href="/estimate" className="text-brand-100 hover:text-white hover:underline">Get an Estimate</Link></li>
-            <li><Link href="/preview" className="text-brand-100 hover:text-white hover:underline">AI Backyard Preview</Link></li>
-            <li><Link href="/about" className="text-brand-100 hover:text-white hover:underline">About</Link></li>
-            <li><Link href="/privacy" className="text-brand-100 hover:text-white hover:underline">Privacy Policy</Link></li>
-          </ul>
-        </nav>
-      </Container>
-
-      <div className="border-t border-white/15">
-        <Container className="flex flex-col items-center justify-between gap-2 py-5 text-xs text-brand-100 sm:flex-row">
-          <p>© {year} {COMPANY.legalName}. All rights reserved.</p>
-          <p>Member, local Home Builders Association · {COMPANY.rating.value}★ on HomeAdvisor</p>
-        </Container>
+      <div className="mx-auto mt-9 flex max-w-content flex-wrap justify-between gap-3 border-t border-white/10 pt-5 text-[12.5px] text-[#6c7884]">
+        <span>© 2026 {COMPANY.legalName} · Home Builders Association member</span>
+        <span>Prices shown are estimates, not quotes — confirmed on a free on-site visit.</span>
       </div>
     </footer>
   );

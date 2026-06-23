@@ -1,67 +1,29 @@
 import type { Metadata } from 'next';
-import { Container, Section, SectionHeading, Eyebrow } from '@/components/ui/layout';
-import { Previewer } from '@/components/previewer/previewer';
-import { BeforeAfter } from '@/components/ui/before-after';
-import { SAMPLE_PAIRS } from '@/lib/samples';
-import { isDemoMode } from '@/lib/env';
+import { YardPreviewer } from '@/components/previewer/yard-previewer';
 
 export const metadata: Metadata = {
-  title: 'AI Backyard Previewer — See Your Court Before We Pour',
+  title: 'See It in Your Backyard — AI Court Previewer',
   description:
-    'Upload a photo of your yard and watch our AI render a finished pickleball, basketball, or multi-sport court onto your exact space in seconds.',
+    'Upload a photo of your space and drop a finished sport court right into it. Spin it, recolor it, resize it — then send the exact look to GRIT with your estimate.',
   alternates: { canonical: '/preview' },
 };
 
 export default function PreviewPage() {
   return (
-    <>
-      <Section className="court-gradient text-white">
-        <Container className="text-center">
-          <Eyebrow>
-            <span className="text-court-200">AI Backyard Previewer</span>
-          </Eyebrow>
-          <h1 className="mx-auto max-w-3xl text-balance text-3xl font-extrabold sm:text-5xl">
-            See your court before we pour
+    <div className="bg-cream">
+      <div className="mx-auto max-w-content px-5 pb-[clamp(48px,6vw,80px)] pt-[clamp(28px,4vw,52px)] sm:px-7">
+        <div className="mb-7 max-w-[680px]">
+          <div className="eyebrow mb-4">Backyard previewer</div>
+          <h1 className="font-display text-[clamp(30px,4.4vw,52px)] font-extrabold leading-none tracking-[-0.03em]">
+            See it in your <span className="text-brand-600">actual</span> backyard.
           </h1>
-          <p className="mx-auto mt-4 max-w-xl text-lg text-brand-100">
-            Upload one photo of your backyard, driveway, or old court. Our AI renders a
-            photorealistic finished court onto your exact space — same house, same light — in
-            seconds.
+          <p className="mt-4 text-[16.5px] leading-relaxed text-[#4a5560]">
+            Upload a photo of your space and drop a finished court right into it. Spin it,
+            recolor it, resize it — then send the exact look to our team with your estimate.
           </p>
-        </Container>
-      </Section>
-
-      <Section className="bg-bg-muted">
-        <Container>
-          {isDemoMode && (
-            <div className="mx-auto mb-8 max-w-3xl rounded-lg border border-court-200 bg-court-50 px-4 py-3 text-center text-sm text-court-800">
-              <strong>Demo mode:</strong> previews return a sample court. Add a Replicate API key to
-              render real uploads. (This banner is hidden once a provider is configured.)
-            </div>
-          )}
-          <Previewer />
-        </Container>
-      </Section>
-
-      <Section className="bg-white">
-        <Container>
-          <SectionHeading
-            eyebrow="Sample previews"
-            title="What it looks like"
-            intro="Real Utah yards, transformed. Drag any slider."
-          />
-          <div className="mt-12 grid gap-8 md:grid-cols-3">
-            {SAMPLE_PAIRS.map((p) => (
-              <figure key={p.id}>
-                <BeforeAfter beforeSrc={p.before} afterSrc={p.after} beforeAlt={`${p.city} before`} afterAlt={`${p.city} after`} />
-                <figcaption className="mt-3 text-sm text-fg-muted">
-                  <span className="font-semibold text-ink">{p.city}, UT</span> — {p.caption}
-                </figcaption>
-              </figure>
-            ))}
-          </div>
-        </Container>
-      </Section>
-    </>
+        </div>
+        <YardPreviewer />
+      </div>
+    </div>
   );
 }

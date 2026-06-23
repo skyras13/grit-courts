@@ -1,36 +1,25 @@
 import { test, expect } from '@playwright/test';
-import { makePng } from './_fixtures';
 
 /**
- * Critical path: a visitor uploads a yard photo, the previewer renders a court
- * (demo/mock provider returns a sample), and the before/after reveal + lead form
- * appear. Then the lead is captured.
+ * Critical path: a visitor uses the Backyard Previewer on a sample yard, the 3D
+ * court is placed into the photo, and they send the design to GRIT as a lead.
  */
-test('uploads a photo, renders a court, and captures a lead', async ({ page }) => {
+test('previewer places a court on the sample yard and captures a lead', async ({ page }) => {
   await page.goto('/preview');
 
-  // Pick a court type.
-  await page.getByRole('button', { name: /Basketball/ }).click();
+  // Use the built-in sample yard (no upload / consent needed for the sample).
+  await page.getByRole('button', { name: /Try it on a sample yard/i }).click();
 
-  // Upload a real, decodable PNG via the hidden file input.
-  await page.locator('input[type="file"]').setInputFiles({
-    name: 'yard.png',
-    mimeType: 'image/png',
-    buffer: makePng(64),
-  });
+  // After the placement animation, the result controls + estimate appear.
+  const send = page.getByRole('button', { name: /Send this to GRIT/i });
+  await expect(send).toBeVisible({ timeout: 15_000 });
+  await send.click();
 
-  // The "Generate" button appears once the image is processed client-side.
-  const generate = page.getByRole('button', { name: /Generate my court preview/i });
-  await expect(generate).toBeVisible({ timeout: 15_000 });
-  await generate.click();
+  const dialog = page.getByRole('dialog', { name: /estimate/i });
+  await expect(dialog).toBeVisible();
+  await dialog.getByLabel('Full name').fill('Preview Tester');
+  await dialog.getByLabel('Phone').fill('801-555-0199');
+  await dialog.getByRole('button', { name: /Send me this estimate/i }).click();
 
-  // Rendering state, then the reveal slider + lead form.
-  await expect(page.getByText(/Love it\?|hand-rendered/i)).toBeVisible({ timeout: 60_000 });
-
-  // Capture the lead from whichever form rendered (success or fallback).
-  await page.getByLabel('Full name').fill('Preview Tester');
-  await page.getByLabel('Phone').fill('801-555-0199');
-  await page.getByRole('button', { name: /Send me my design|Send/i }).click();
-
-  await expect(page).toHaveURL(/\/thank-you/);
+  await expect(page.getByText(/Your estimate is on its way/i)).toBeVisible();
 });
