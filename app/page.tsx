@@ -19,7 +19,7 @@ export default function HomePage() {
           <span className="opacity-40">/</span>
           <span>Licensed &amp; insured</span>
           <span className="opacity-40">/</span>
-          <span>10-year surface warranty</span>
+          <span>Indoor &amp; outdoor courts</span>
           <span className="opacity-40">/</span>
           <span>One crew, start to finish</span>
         </div>
@@ -29,10 +29,10 @@ export default function HomePage() {
       <section id="build" className="mx-auto max-w-content scroll-mt-24 px-5 py-[clamp(56px,7vw,100px)] sm:px-7">
         <div className="mb-11 flex flex-wrap items-end justify-between gap-8">
           <h2 className="max-w-[16ch] font-display text-[clamp(30px,4vw,48px)] font-extrabold leading-[1.02]">
-            Courts are where we start. The yard is what we finish.
+            Courts are all we build. So we build them right.
           </h2>
           <p className="max-w-[330px] text-[15.5px] leading-relaxed text-muted">
-            GRIT is known for sport courts — but we build the whole backyard, sequenced by a single crew under one warranty.
+            From a backyard half-court to an indoor multi-sport gym, every GRIT court is poured, surfaced, and lined by one crew — no subs to chase.
           </p>
         </div>
 

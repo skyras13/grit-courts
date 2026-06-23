@@ -86,7 +86,7 @@ export function Configurator() {
             <Field label="Add-ons"><AddonToggles acc={config.acc} onToggle={toggleAcc} /></Field>
           </div>
           {/* viewport */}
-          <div className="relative min-h-[560px]" style={{ background: 'radial-gradient(120% 100% at 50% 32%,#1c3858,#0d1d2e 70%)' }}>
+          <div className="relative min-h-[560px]" style={{ background: 'radial-gradient(120% 100% at 50% 32%,#1c4734,#0d1f16 70%)' }}>
             <div className="absolute left-[18px] top-4 z-[4] text-[11px] font-bold uppercase tracking-[0.12em] text-white/55">Live 3D · drag to orbit · scroll to zoom</div>
             {viewport}
             {loadingModel && (
@@ -100,7 +100,7 @@ export function Configurator() {
         </div>
       ) : (
         <div className="mb-9">
-          <div className="relative h-[54vh] min-h-[380px] overflow-hidden rounded-t-lg border border-b-0 border-muted-line" style={{ background: 'radial-gradient(120% 100% at 50% 30%,#1c3858,#0d1d2e 70%)' }}>
+          <div className="relative h-[54vh] min-h-[380px] overflow-hidden rounded-t-lg border border-b-0 border-muted-line" style={{ background: 'radial-gradient(120% 100% at 50% 30%,#1c4734,#0d1f16 70%)' }}>
             <div className="absolute left-[18px] top-4 z-[4] text-[11px] font-bold uppercase tracking-[0.12em] text-white/55">Live 3D · drag to orbit</div>
             {viewport}
             <div className="absolute right-[18px] top-3.5 z-[4] text-right">

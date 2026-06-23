@@ -84,8 +84,8 @@ export function PaletteRow({
             style={{
               height,
               background: `linear-gradient(135deg,${p.play} 0 56%,${p.surround} 56% 100%)`,
-              border: `2px solid ${sel ? '#2b598a' : '#dfe3e8'}`,
-              boxShadow: sel ? '0 0 0 2px #bcd4ea' : 'none',
+              border: `2px solid ${sel ? '#27704a' : '#dfe3e8'}`,
+              boxShadow: sel ? '0 0 0 2px #aed8c1' : 'none',
             }}
           />
         );

@@ -9,19 +9,24 @@ import type { CourtType, Testimonial } from './types';
 export const COMPANY = {
   name: 'GRIT Courts',
   legalName: 'GRIT Courts LLC',
-  tagline: 'Utah’s custom sport-court builders',
-  phone: '(801) 555-0142', // ASSUMPTION: placeholder — swap for the real tracking number
+  // Real positioning from builtwithgrit.com: "Utah's trusted court builders."
+  tagline: 'Utah’s trusted court builders',
+  // The live site doesn't publish a phone (form/email + Facebook driven).
+  // Real inbox is grant@ / sales@builtwithgrit.com. Phone is a placeholder.
+  phone: '(801) 555-0142', // PLACEHOLDER — owner to provide a real/tracking number
   phoneHref: 'tel:+18015550142',
-  email: 'hello@builtwithgrit.com',
+  email: 'grant@builtwithgrit.com', // real — owner inbox
+  salesEmail: 'sales@builtwithgrit.com', // real
   city: 'Provo',
   region: 'UT',
   regionName: 'Utah',
-  street: '', // ASSUMPTION: not published; owner to confirm for LocalBusiness schema
+  street: '', // not published; owner to confirm for LocalBusiness schema
   postalCode: '84601',
-  areaServed: ['Salt Lake County', 'Utah County', 'Wasatch County', 'Summit County'],
-  rating: { value: 4.8, count: 37 }, // from HomeAdvisor footprint; confirm exact count
-  foundingYear: 2018, // ASSUMPTION
-  brandColor: '#2b598a',
+  areaServed: ['Utah County', 'Salt Lake County', 'Wasatch County', 'Summit County'],
+  rating: { value: 4.8, count: 37 }, // ~4.8★ HomeAdvisor footprint; confirm exact count
+  courtsBuilt: '20+', // from the live site
+  foundingYear: 2018, // ASSUMPTION — owner to confirm
+  brandColor: '#27704a', // forest green sampled from the logo
   social: {
     facebook: 'https://www.facebook.com/builtwithgrit',
     instagram: 'https://www.instagram.com/builtwithgrit',
