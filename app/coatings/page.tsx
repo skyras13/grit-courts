@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Image from 'next/image';
 import { NavyLink, UnderlineLink, WhiteLink, OutlineLightLink } from '@/components/ui/buttons';
+import { SURFACE_COLORS } from '@/lib/court-designer';
 
 export const metadata: Metadata = {
   title: 'Coatings Products | Pro Court & Epoxy Systems | GRIT Courts',
@@ -95,6 +96,32 @@ export default function CoatingsPage() {
               </div>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* Acrylic color chart — the exact surface colors we offer */}
+      <section className="mx-auto max-w-content px-5 py-16 sm:px-7 sm:py-20">
+        <div className="eyebrow mb-4">Surface colors</div>
+        <h2 className="max-w-2xl font-display text-[clamp(26px,3.2vw,38px)] font-extrabold leading-[1.05] tracking-[-0.02em] text-ink">
+          Our acrylic court color chart
+        </h2>
+        <p className="mt-4 max-w-2xl text-[15.5px] leading-relaxed text-muted">
+          Every court is finished in UV-stable acrylic color. Mix and match any of these on your
+          border, court, and key — or preview them live in the 3D Court Designer.
+        </p>
+        <div className="mt-9 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
+          {SURFACE_COLORS.map((c) => (
+            <div key={c.id} className="overflow-hidden rounded-lg border border-muted-line bg-paper shadow-card">
+              <div className="h-20 w-full" style={{ background: c.hex }} />
+              <div className="px-3 py-2.5">
+                <div className="text-[13.5px] font-bold text-ink">{c.name}</div>
+                <div className="text-[11.5px] uppercase tracking-wide text-muted-faint">{c.hex}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+        <div className="mt-8">
+          <NavyLink href="/design">Try colors in the 3D designer →</NavyLink>
         </div>
       </section>
 

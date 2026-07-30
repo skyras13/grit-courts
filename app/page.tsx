@@ -29,10 +29,12 @@ export default function HomePage() {
       <section id="build" className="mx-auto max-w-content scroll-mt-24 px-5 py-[clamp(56px,7vw,100px)] sm:px-7">
         <div className="mb-11 flex flex-wrap items-end justify-between gap-8">
           <h2 className="max-w-[16ch] font-display text-[clamp(30px,4vw,48px)] font-extrabold leading-[1.02]">
-            Courts are all we build. So we build them right.
+            Full-service athletic court installers.
           </h2>
-          <p className="max-w-[330px] text-[15.5px] leading-relaxed text-muted">
-            From a backyard half-court to an indoor multi-sport gym, every GRIT court is poured, surfaced, and lined by one crew — no subs to chase.
+          <p className="max-w-[360px] text-[15.5px] leading-relaxed text-muted">
+            From pouring your slab to surfacing, painting lines, and installing hoops, lights, and
+            nets — we do it all. Post-tension or rebar-reinforced slabs and professional-grade
+            materials, from one crew that’s transparent and quick to respond.
           </p>
         </div>
 

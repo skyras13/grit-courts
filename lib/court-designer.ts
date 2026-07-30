@@ -17,29 +17,37 @@ export interface SurfaceColor {
   hex: string;
 }
 
+// Exact acrylic color set + names from courtdesigner.builtwithgrit.com (colors.js).
 export const SURFACE_COLORS: SurfaceColor[] = [
-  { id: 'competition-green', name: 'Competition Green', hex: '#3f6f52' },
-  { id: 'forest-green', name: 'Forest Green', hex: '#25412e' },
-  { id: 'slate-gray', name: 'Slate Gray', hex: '#3c454d' },
-  { id: 'silver-gray', name: 'Silver Gray', hex: '#8b929a' },
-  { id: 'competition-blue', name: 'Competition Blue', hex: '#274a6d' },
-  { id: 'royal-blue', name: 'Royal Blue', hex: '#175e9c' },
-  { id: 'sky-blue', name: 'Sky Blue', hex: '#8fc0e3' },
-  { id: 'sand', name: 'Sand', hex: '#b6a079' },
-  { id: 'chestnut', name: 'Chestnut', hex: '#8a6a43' },
-  { id: 'purple', name: 'Purple', hex: '#4a3f6b' },
-  { id: 'maroon', name: 'Maroon', hex: '#8f2d3b' },
-  { id: 'magenta', name: 'Magenta', hex: '#d64f8f' },
-  { id: 'orange', name: 'Orange', hex: '#e0662a' },
-  { id: 'gold', name: 'Gold', hex: '#f2c230' },
-  { id: 'black', name: 'Black', hex: '#14171b' },
+  { id: 'competition-green', name: 'Competition Green', hex: '#38603e' },
+  { id: 'medium-green', name: 'Medium Green', hex: '#384930' },
+  { id: 'slate', name: 'Slate', hex: '#505457' },
+  { id: 'gray', name: 'Gray', hex: '#696c6f' },
+  { id: 'competition-blue', name: 'Competition Blue', hex: '#153056' },
+  { id: 'light-blue', name: 'Light Blue', hex: '#005490' },
+  { id: 'sky-blue', name: 'Sky Blue', hex: '#7ba3d6' },
+  { id: 'sandstone', name: 'Sandstone', hex: '#8e7d6b' },
+  { id: 'beige', name: 'Beige', hex: '#936f4b' },
+  { id: 'pro-purple', name: 'Pro Purple', hex: '#403a5d' },
+  { id: 'bright-red', name: 'Bright Red', hex: '#ab1f2f' },
+  { id: 'passion-pink', name: 'Passion Pink', hex: '#ef5296' },
+  { id: 'bright-orange', name: 'Bright Orange', hex: '#f36e26' },
+  { id: 'bright-yellow', name: 'Bright Yellow', hex: '#fdb714' },
+  { id: 'black', name: 'Black', hex: '#000000' },
 ];
 
 export function colorHex(id: string): string {
-  return SURFACE_COLORS.find((c) => c.id === id)?.hex ?? '#274a6d';
+  return SURFACE_COLORS.find((c) => c.id === id)?.hex ?? '#153056';
 }
 export function colorName(id: string): string {
   return SURFACE_COLORS.find((c) => c.id === id)?.name ?? 'Competition Blue';
+}
+
+/** RGB string form (as the live designer stores it), for reference/exports. */
+export function colorRgb(id: string): string {
+  const hex = colorHex(id).replace('#', '');
+  const n = parseInt(hex, 16);
+  return `rgb(${(n >> 16) & 255}, ${(n >> 8) & 255}, ${n & 255})`;
 }
 
 /** Zone = an independently-colorable region of a court. */
@@ -111,9 +119,9 @@ export const DEFAULT_DESIGN: DesignConfig = {
   zones: {
     border: 'competition-green',
     court: 'competition-blue',
-    kitchen: 'silver-gray',
+    kitchen: 'gray',
     threePoint: 'competition-blue',
-    topOfKey: 'silver-gray',
+    topOfKey: 'gray',
     key: 'competition-green',
   },
   size: 'half',

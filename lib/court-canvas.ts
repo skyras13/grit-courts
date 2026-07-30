@@ -52,6 +52,15 @@ export function drawCourt(
       /* logo not ready */
     }
   }
+
+  // Faint GRIT watermark, bottom-right (mirrors the live designer).
+  ctx.globalAlpha = 0.5;
+  ctx.textAlign = 'right';
+  ctx.textBaseline = 'bottom';
+  ctx.font = '700 20px Archivo, system-ui, sans-serif';
+  ctx.fillStyle = 'rgba(255,255,255,0.85)';
+  ctx.fillText('GRIT COURTS', COURT_W - 22, COURT_H - 18);
+  ctx.globalAlpha = 1;
 }
 
 // ── Pickleball: net down the center, gray kitchen band, 4 service boxes ───────
