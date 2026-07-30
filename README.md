@@ -51,6 +51,31 @@ Every feature checks a capability flag (`lib/env.ts`) and degrades gracefully if
 
 ---
 
+## Deploy to Vercel
+
+The app builds zero-config on Vercel and **runs in demo mode with no environment variables**, so you can ship the pitch link in ~2 minutes and add keys later.
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/skyras13/grit-courts)
+
+**Fastest path (GitHub import):**
+1. Go to **[vercel.com/new](https://vercel.com/new)** and sign in with GitHub.
+2. **Import** the `skyras13/grit-courts` repo.
+3. Framework = **Next.js** (auto-detected). Leave build/output settings as-is.
+4. Click **Deploy**. You get a live `*.vercel.app` URL to send to the owner.
+
+**Or from the CLI (one-time login):**
+```bash
+npm i -g vercel
+vercel login
+vercel --prod
+```
+
+**Add env vars later** (Vercel → Project → Settings → Environment Variables) using the table above — start with `ADMIN_PASSWORD` + `NEXT_PUBLIC_SITE_URL`, then Supabase, Resend, and `REPLICATE_API_TOKEN` (set `RENDER_PROVIDER=replicate`) to turn on the real AI previewer. Redeploy after adding keys.
+
+**Custom domain:** Vercel → Project → Settings → Domains → add `builtwithgrit.com` (or a subdomain like `new.builtwithgrit.com`) and point DNS as shown. Then set `NEXT_PUBLIC_SITE_URL` to the final URL so canonical tags + the sitemap are correct.
+
+---
+
 ## Architecture at a glance
 
 ```
