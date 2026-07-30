@@ -25,16 +25,35 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* Upgrade your home today — verbatim from builtwithgrit.com */}
+      <section className="bg-cream">
+        <div className="mx-auto max-w-3xl px-5 py-[clamp(48px,6vw,84px)] text-center sm:px-7">
+          <h2 className="font-display text-[clamp(28px,4vw,44px)] font-extrabold leading-[1.05]">
+            Upgrade Your Home Today!
+          </h2>
+          <p className="mx-auto mt-6 max-w-2xl text-[17px] leading-relaxed text-muted">
+            At GRIT, we are full-service athletic court installers. From pouring your slab to
+            surfacing &amp; painting lines to installing hoops, lights, and nets, let us champion
+            your court building process!
+          </p>
+          <p className="mx-auto mt-4 max-w-2xl text-[17px] leading-relaxed text-muted">
+            We offer post-tension or rebar-reinforced slabs and use professional grade materials to
+            ensure a high-quality court. Unlike the usual contractor, we take pride in being
+            transparent and quick to respond. Contact us to get your free estimate today and build
+            with GRIT!
+          </p>
+        </div>
+      </section>
+
       {/* What we build */}
       <section id="build" className="mx-auto max-w-content scroll-mt-24 px-5 py-[clamp(56px,7vw,100px)] sm:px-7">
         <div className="mb-11 flex flex-wrap items-end justify-between gap-8">
           <h2 className="max-w-[16ch] font-display text-[clamp(30px,4vw,48px)] font-extrabold leading-[1.02]">
-            Full-service athletic court installers.
+            One crew, every kind of court.
           </h2>
-          <p className="max-w-[360px] text-[15.5px] leading-relaxed text-muted">
-            From pouring your slab to surfacing, painting lines, and installing hoops, lights, and
-            nets — we do it all. Post-tension or rebar-reinforced slabs and professional-grade
-            materials, from one crew that’s transparent and quick to respond.
+          <p className="max-w-[330px] text-[15.5px] leading-relaxed text-muted">
+            Basketball, pickleball, tennis, and multi-sport courts — designed, poured, surfaced, and
+            lined end to end. Plus the whole backyard around them.
           </p>
         </div>
 

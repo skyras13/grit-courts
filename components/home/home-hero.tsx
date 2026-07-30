@@ -17,24 +17,24 @@ export function HomeHero() {
     <>
       <section className="mx-auto grid max-w-content items-center gap-8 px-5 pb-8 pt-9 sm:px-7 lg:grid-cols-[1fr_1.08fr] lg:gap-16 lg:pb-10 lg:pt-[72px]">
         <div className="animate-fade-up">
-          <div className="eyebrow mb-6">Custom court builders · Provo, UT</div>
+          <div className="eyebrow mb-6">Build With GRIT</div>
           <h1 className="text-balance font-display text-[clamp(38px,5.4vw,66px)] font-extrabold leading-[1.0] tracking-[-0.03em] text-ink">
             {variant === 'A' ? (
-              <>Build the backyard you’ll never want to <span className="text-brand-600">leave.</span></>
+              <>High-Quality Court <span className="text-brand-600">Construction</span></>
             ) : (
               <>Design your court, down to the <span className="text-brand-600">last line.</span></>
             )}
           </h1>
           <p className="mt-5 max-w-[480px] text-[clamp(16px,1.4vw,18.5px)] leading-relaxed text-[#42504a]">
             {variant === 'A'
-              ? 'Utah’s trusted builders of custom basketball, pickleball, and multi-sport courts — for homes and businesses across the Wasatch Front, designed and surfaced by one local crew.'
+              ? 'Full-service athletic court installers on the Wasatch Front — from pouring your slab to surfacing, painting lines, and installing hoops, lights, and nets.'
               : 'Spin a real 3D court, pick your surface colors, add fencing and lights — then drop it into a photo of your own backyard before we ever break ground.'}
           </p>
           <div className="mb-8 mt-7 flex flex-wrap items-center gap-5">
             {variant === 'A' ? (
               <>
-                <NavyLink href="/preview">See it in your yard</NavyLink>
-                <UnderlineLink href="/gallery">View our work →</UnderlineLink>
+                <NavyLink href="/services">Athletic Courts</NavyLink>
+                <UnderlineLink href="/preview">See it in your yard →</UnderlineLink>
               </>
             ) : (
               <>
