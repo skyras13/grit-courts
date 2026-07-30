@@ -15,11 +15,11 @@ test('previewer places a court on the sample yard and captures a lead', async ({
   await expect(send).toBeVisible({ timeout: 15_000 });
   await send.click();
 
-  const dialog = page.getByRole('dialog', { name: /estimate/i });
+  const dialog = page.getByRole('dialog', { name: /quote/i });
   await expect(dialog).toBeVisible();
   await dialog.getByLabel('Full name').fill('Preview Tester');
   await dialog.getByLabel('Phone').fill('801-555-0199');
-  await dialog.getByRole('button', { name: /Send me this estimate/i }).click();
+  await dialog.getByRole('button', { name: /Request my free quote/i }).click();
 
-  await expect(page.getByText(/Your estimate is on its way/i)).toBeVisible();
+  await expect(page.getByText(/Your request is in/i)).toBeVisible();
 });

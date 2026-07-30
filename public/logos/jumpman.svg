@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200" role="img" aria-label="Leaping player logo">
+  <!-- Generic leaping-basketball-player silhouette (placeholder art, not a trademark) -->
+  <g fill="#14171b">
+    <circle cx="118" cy="34" r="15"/>
+    <path d="M150 40 C120 44 96 58 70 44 C58 38 44 44 46 56 C48 66 66 66 82 70 C70 86 52 96 40 120 C34 132 46 142 56 134 C74 120 86 104 100 96 C108 118 104 140 96 168 C92 182 108 188 114 174 C126 146 132 116 128 92 C144 84 160 74 172 58 C180 48 162 38 150 40 Z"/>
+  </g>
+</svg>

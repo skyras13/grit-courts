@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200" role="img" aria-label="Utah logo placeholder">
+  <circle cx="100" cy="100" r="92" fill="#cc0000"/>
+  <circle cx="100" cy="100" r="92" fill="none" stroke="#ffffff" stroke-width="6"/>
+  <text x="100" y="132" text-anchor="middle" font-family="Archivo, Arial, sans-serif" font-weight="900" font-size="104" fill="#ffffff">U</text>
+</svg>

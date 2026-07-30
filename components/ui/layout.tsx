@@ -1,4 +1,4 @@
-import type { ElementType, ReactNode } from 'react';
+import { createElement, type ElementType, type ReactNode } from 'react';
 import { cn } from '@/lib/utils';
 
 export function Container({
@@ -22,10 +22,10 @@ export function Section({
   as?: ElementType;
   id?: string;
 }) {
-  return (
-    <As id={id} className={cn('py-16 sm:py-20 lg:py-24', className)}>
-      {children}
-    </As>
+  return createElement(
+    As,
+    { id, className: cn('py-16 sm:py-20 lg:py-24', className) },
+    children,
   );
 }
 

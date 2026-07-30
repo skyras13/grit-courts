@@ -9,8 +9,15 @@
 import 'server-only';
 import type { Lead, Render } from './types';
 
-const leads = new Map<string, Lead>();
-const renders = new Map<string, Render>();
+// Stored on globalThis so every route-handler bundle shares ONE instance.
+// (Next dev/serverless can give each route its own module copy — a plain
+// module-level Map would then not be shared between POST and GET handlers.)
+const g = globalThis as unknown as {
+  __gritLeads?: Map<string, Lead>;
+  __gritRenders?: Map<string, Render>;
+};
+const leads: Map<string, Lead> = (g.__gritLeads ??= new Map());
+const renders: Map<string, Render> = (g.__gritRenders ??= new Map());
 
 export const demoStore = {
   insertLead(lead: Lead): Lead {
