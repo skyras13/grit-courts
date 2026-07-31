@@ -58,22 +58,16 @@ export function YardPreviewer() {
       form.append('image', new File([body], 'yard.jpg', { type: body.type || 'image/jpeg' }));
       form.append('courtType', toLeadCourtType(design.sport));
       form.append('detail', designDetail(design));
+      // The render runs synchronously server-side and returns the image URL
+      // directly (no polling — reliable on serverless).
       const res = await fetch('/api/renders', { method: 'POST', body: form });
       const data = await res.json();
-      if (!res.ok || !data.ok) throw new Error(data.error ?? 'Could not start the render.');
-      const deadline = Date.now() + 90_000;
-      while (Date.now() < deadline) {
-        await new Promise((r) => setTimeout(r, 1800));
-        const poll = await (await fetch(`/api/renders/${data.renderId}`)).json();
-        if (poll.status === 'done' && poll.renderedImageUrl) {
-          setAiUrl(poll.renderedImageUrl);
-          setPhase('done');
-          track('previewer_render_done', { sport: design.sport });
-          return;
-        }
-        if (poll.status === 'failed') throw new Error('The render didn’t come out right.');
+      if (!res.ok || !data.ok || !data.renderedImageUrl) {
+        throw new Error(data.error ?? 'The render didn’t come out right.');
       }
-      throw new Error('This is taking longer than usual.');
+      setAiUrl(data.renderedImageUrl);
+      setPhase('done');
+      track('previewer_render_done', { sport: design.sport });
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Render failed.');
       setPhase('failed');

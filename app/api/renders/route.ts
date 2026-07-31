@@ -1,4 +1,4 @@
-import { NextResponse, after } from 'next/server';
+import { NextResponse } from 'next/server';
 import { headers } from 'next/headers';
 import { COURT_TYPES, type CourtType } from '@/lib/types';
 import { ACCEPTED_IMAGE_TYPES, MAX_UPLOAD_BYTES } from '@/lib/schemas';
@@ -85,43 +85,51 @@ export async function POST(request: Request) {
     rendered_image_url: null,
     provider: env.RENDER_PROVIDER,
     model: null,
-    prompt: buildPrompt(courtType),
-    status: 'queued',
+    prompt: buildPrompt(courtType, detail),
+    status: 'processing',
     error: null,
     latency_ms: null,
     cost_usd: null,
   });
 
-  // Run the model AFTER the response is sent. Keeps the request snappy and the
-  // polling UI honest. The mock provider works without a signed URL.
-  after(async () => {
-    try {
-      await updateRender(render.id, { status: 'processing' });
-      const needsRealImage = env.RENDER_PROVIDER !== 'mock';
-      if (needsRealImage && !stored.signedUrl) {
-        throw new RenderError('No accessible image URL for the model.', env.RENDER_PROVIDER);
-      }
-      const result = await renderCourt({
-        imageUrl: stored.signedUrl ?? SAMPLE_RENDERS[courtType],
-        courtType,
-        detail,
-      });
-      await updateRender(render.id, {
-        status: 'done',
-        rendered_image_url: result.url,
-        provider: result.provider,
-        model: result.model,
-        latency_ms: result.latencyMs,
-        cost_usd: result.costUsd,
-      });
-    } catch (err) {
-      console.error('[api/renders] render failed', err);
-      await updateRender(render.id, {
-        status: 'failed',
-        error: err instanceof Error ? err.message : 'Render failed',
-      });
+  // Run the model synchronously and return the image URL directly. This avoids
+  // client polling — which is unreliable on serverless because the poll GET can
+  // land on a different instance than the POST (in-memory state isn't shared).
+  // Renders take ~2–20s, comfortably within maxDuration. A DB (when configured)
+  // still records the row for the admin dashboard.
+  try {
+    const needsRealImage = env.RENDER_PROVIDER !== 'mock';
+    if (needsRealImage && !stored.signedUrl) {
+      throw new RenderError('No accessible image URL for the model.', env.RENDER_PROVIDER);
     }
-  });
-
-  return NextResponse.json({ ok: true, renderId: render.id, status: 'queued' });
+    const result = await renderCourt({
+      imageUrl: stored.signedUrl ?? SAMPLE_RENDERS[courtType],
+      courtType,
+      detail,
+    });
+    await updateRender(render.id, {
+      status: 'done',
+      rendered_image_url: result.url,
+      provider: result.provider,
+      model: result.model,
+      latency_ms: result.latencyMs,
+      cost_usd: result.costUsd,
+    }).catch(() => undefined);
+    return NextResponse.json({
+      ok: true,
+      renderId: render.id,
+      status: 'done',
+      renderedImageUrl: result.url,
+    });
+  } catch (err) {
+    console.error('[api/renders] render failed', err);
+    await updateRender(render.id, {
+      status: 'failed',
+      error: err instanceof Error ? err.message : 'Render failed',
+    }).catch(() => undefined);
+    return NextResponse.json(
+      { ok: false, error: 'The preview didn’t come out right. Please try another photo.' },
+      { status: 502 },
+    );
+  }
 }
