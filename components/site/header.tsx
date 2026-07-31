@@ -8,20 +8,17 @@ import { useEstimate } from '@/components/estimate/estimate-provider';
 import { track } from '@/lib/analytics';
 import { cn } from '@/lib/utils';
 
+// Matches the live site's navigation, in the same order.
 const NAV = [
-  { href: '/services', label: 'Our Services', match: (p: string) => p.startsWith('/services') },
+  { href: '/', label: 'Home', match: (p: string) => p === '/' },
   { href: '/court-surfacing', label: 'Court Surfacing', match: (p: string) => p.startsWith('/court-surfacing') },
-  { href: '/design', label: 'Court Designer', match: (p: string) => p.startsWith('/design') },
-  { href: '/preview', label: 'See Your Yard', match: (p: string) => p.startsWith('/preview') },
   { href: '/gallery', label: 'Gallery', match: (p: string) => p.startsWith('/gallery') },
-  { href: '/coatings', label: 'Coatings', match: (p: string) => p.startsWith('/coatings') },
-];
-
-// Secondary links surfaced in the mobile menu + footer for full parity.
-const NAV_MORE = [
-  { href: '/contact', label: 'Contact Us' },
-  { href: '/trade-partners', label: 'Trade Partners' },
-  { href: '/warranty', label: 'Warranty Agreement' },
+  { href: '/services', label: 'Our Services', match: (p: string) => p.startsWith('/services') },
+  { href: '/contact', label: 'Contact Us', match: (p: string) => p.startsWith('/contact') },
+  { href: '/trade-partners', label: 'Trade Partners', match: (p: string) => p.startsWith('/trade-partners') },
+  { href: '/warranty', label: 'Warranty Agreement', match: (p: string) => p.startsWith('/warranty') },
+  { href: '/design', label: 'Court Designer', match: (p: string) => p.startsWith('/design') },
+  { href: '/coatings', label: 'Coatings Products', match: (p: string) => p.startsWith('/coatings') },
 ];
 
 export function Header() {
@@ -36,7 +33,7 @@ export function Header() {
           <Logo />
         </Link>
 
-        <nav className="hidden items-center gap-0.5 md:flex" aria-label="Primary">
+        <nav className="hidden items-center gap-0.5 xl:flex" aria-label="Primary">
           {NAV.map((n) => {
             const active = n.match(pathname);
             return (
@@ -44,7 +41,7 @@ export function Header() {
                 key={n.href}
                 href={n.href}
                 className={cn(
-                  'whitespace-nowrap rounded-md px-2.5 py-2 text-[13.5px] transition',
+                  'whitespace-nowrap rounded-md px-2 py-2 text-[13px] transition',
                   active ? 'font-bold text-brand-600' : 'font-semibold text-[#46525d] hover:text-brand-600',
                 )}
               >
@@ -54,7 +51,7 @@ export function Header() {
           })}
         </nav>
 
-        <div className="hidden items-center gap-4 md:flex">
+        <div className="hidden items-center gap-4 xl:flex">
           <button
             onClick={() => { track('cta_click', { location: 'header' }); open({ source: 'header' }); }}
             className="whitespace-nowrap rounded-[5px] bg-brand-600 px-[18px] py-3 text-sm font-bold text-white transition hover:bg-brand-700"
@@ -64,7 +61,7 @@ export function Header() {
         </div>
 
         <button
-          className="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-muted-line md:hidden"
+          className="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-muted-line xl:hidden"
           aria-expanded={menu}
           aria-label={menu ? 'Close menu' : 'Open menu'}
           onClick={() => setMenu((v) => !v)}
@@ -78,13 +75,16 @@ export function Header() {
       </div>
 
       {menu && (
-        <div className="border-t border-muted-line md:hidden">
+        <div className="border-t border-muted-line xl:hidden">
           <div className="mx-auto flex max-w-content flex-col gap-1 px-5 py-4">
-            {[...NAV, ...NAV_MORE].map((n) => (
+            {NAV.map((n) => (
               <Link key={n.href} href={n.href} onClick={() => setMenu(false)} className="rounded-lg px-3 py-2.5 text-base font-semibold text-ink hover:bg-cream">
                 {n.label}
               </Link>
             ))}
+            <Link href="/preview" onClick={() => setMenu(false)} className="rounded-lg px-3 py-2.5 text-base font-semibold text-ink hover:bg-cream">
+              See It In Your Yard
+            </Link>
             <button onClick={() => { setMenu(false); open({ source: 'header-mobile' }); }} className="mt-2 rounded-md bg-brand-600 px-5 py-3 font-bold text-white">
               Get a Quote Here!
             </button>
