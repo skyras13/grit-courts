@@ -44,9 +44,14 @@ export function drawCourt(
 
   if (config.logo !== 'none' && logo) {
     const s = 150;
+    const pos = config.logoPos ?? 'center';
+    const cx =
+      pos === 'left' ? COURT_W * 0.3 : pos === 'right' ? COURT_W * 0.7 : COURT_W / 2;
+    const cy =
+      pos === 'top' ? COURT_H * 0.3 : pos === 'bottom' ? COURT_H * 0.7 : COURT_H / 2;
     try {
       ctx.globalAlpha = 0.96;
-      ctx.drawImage(logo, COURT_W / 2 - s / 2, COURT_H / 2 - s / 2, s, s);
+      ctx.drawImage(logo, cx - s / 2, cy - s / 2, s, s);
       ctx.globalAlpha = 1;
     } catch {
       /* logo not ready */
@@ -90,23 +95,49 @@ function drawPickleball(ctx: CanvasRenderingContext2D, c: DesignConfig, L: strin
   // Net (center, darker)
   line(ctx, x + w / 2, y - 6, x + w / 2, y + h + 6, 7, '#0d1722');
 
-  // Optional basketball overlay (key + arc) at the top, per level
+  // Optional basketball overlay — added at BOTH ends, progressively, to match
+  // the live designer (Simple = arcs + FT lines; Standard = + painted key lanes;
+  // Full = + free-throw keyholes). Key lanes take the Kitchen color.
   if (c.bball !== 'none') {
-    const cx = x + w / 2;
-    const keyW = w * 0.16, keyH = h * 0.34;
-    if (c.bball !== 'simple') {
-      // three-point arc
+    const cyMid = y + h / 2;
+    const kitchen = colorHex(c.zones.kitchen);
+    const laneH = h * 0.4; // painted lane width (across the court)
+    const laneLen = w * 0.2; // baseline → free-throw line
+    const tpR = h * 0.56; // three-point radius
+
+    const drawEnd = (baseX: number, dir: 1 | -1) => {
+      const ftX = baseX + dir * laneLen; // free-throw line x
+      // Standard/Full: painted key lane in the kitchen color
+      if (c.bball !== 'simple') {
+        ctx.fillStyle = kitchen;
+        const lx = dir === 1 ? baseX : baseX - laneLen;
+        ctx.fillRect(lx, cyMid - laneH / 2, laneLen, laneH);
+        rectStroke(ctx, lx, cyMid - laneH / 2, laneLen, laneH, lw, L);
+      }
+      // Free-throw line (top of key) — present at every level
+      line(ctx, ftX, cyMid - laneH / 2, ftX, cyMid + laneH / 2, lw, L);
+      // Full: free-throw circle (keyhole), inner half filled with kitchen color
+      if (c.bball === 'full') {
+        ctx.beginPath();
+        ctx.fillStyle = kitchen;
+        ctx.arc(ftX, cyMid, laneH * 0.5, dir === 1 ? -Math.PI / 2 : Math.PI / 2, dir === 1 ? Math.PI / 2 : (Math.PI * 3) / 2, dir === -1);
+        ctx.fill();
+        ctx.strokeStyle = L; ctx.lineWidth = lw; ctx.stroke();
+      }
+      // Three-point arc from the baseline
       ctx.strokeStyle = L; ctx.lineWidth = lw;
       ctx.beginPath();
-      ctx.arc(cx, y + keyH * 0.9, w * 0.28, Math.PI * 0.08, Math.PI - Math.PI * 0.08);
+      ctx.arc(baseX, cyMid, tpR, dir === 1 ? -Math.PI / 2 : Math.PI / 2, dir === 1 ? Math.PI / 2 : (Math.PI * 3) / 2, dir === -1);
       ctx.stroke();
-    }
-    rectStroke(ctx, cx - keyW / 2, y, keyW, keyH, lw, L); // key
-    if (c.bball === 'full') {
+      // Hoop mark at the baseline
+      ctx.fillStyle = '#e0662a';
       ctx.beginPath();
-      ctx.arc(cx, y + keyH, keyW * 0.5, 0, Math.PI * 2);
-      ctx.stroke();
-    }
+      ctx.arc(baseX + dir * 12, cyMid, 6, 0, Math.PI * 2);
+      ctx.fill();
+    };
+
+    drawEnd(x, 1);
+    drawEnd(x + w, -1);
   }
 }
 

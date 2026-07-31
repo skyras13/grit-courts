@@ -88,6 +88,16 @@ export const BBALL_OVERLAYS: { key: BasketballOverlay; label: string }[] = [
 export type CourtSizeOpt = 'half' | 'full';
 
 export type LogoKey = 'none' | 'jumpman' | 'byu' | 'utah' | 'custom';
+
+/** Where the logo is placed on the court. */
+export type LogoPos = 'center' | 'left' | 'right' | 'top' | 'bottom';
+export const LOGO_POSITIONS: { key: LogoPos; label: string }[] = [
+  { key: 'center', label: 'Center' },
+  { key: 'left', label: 'Left' },
+  { key: 'right', label: 'Right' },
+  { key: 'top', label: 'Top' },
+  { key: 'bottom', label: 'Bottom' },
+];
 export const LOGO_PRESETS: { key: LogoKey; label: string }[] = [
   { key: 'none', label: 'None' },
   { key: 'jumpman', label: 'Jumpman' },
@@ -110,6 +120,7 @@ export interface DesignConfig {
   size: CourtSizeOpt; // basketball only
   bball: BasketballOverlay; // pickleball only
   logo: LogoKey;
+  logoPos: LogoPos;
   customLogoUrl?: string;
   lines: string; // line color id (usually white/black)
 }
@@ -127,6 +138,7 @@ export const DEFAULT_DESIGN: DesignConfig = {
   size: 'half',
   bball: 'none',
   logo: 'none',
+  logoPos: 'center',
   lines: 'white',
 };
 
@@ -159,7 +171,10 @@ export function designSummary(c: DesignConfig): { k: string; v: string }[] {
   if (c.sport === 'basketball') rows.push({ k: 'Size', v: c.size === 'full' ? 'Full court' : 'Half court' });
   for (const z of zones) rows.push({ k: z.label, v: colorName(c.zones[z.key]) });
   if (c.sport === 'pickleball' && c.bball !== 'none') rows.push({ k: 'Basketball lines', v: c.bball });
-  if (c.logo !== 'none') rows.push({ k: 'Logo', v: c.logo === 'custom' ? 'Custom upload' : SPORT_LABEL_LOGO(c.logo) });
+  if (c.logo !== 'none') {
+    rows.push({ k: 'Logo', v: c.logo === 'custom' ? 'Custom upload' : SPORT_LABEL_LOGO(c.logo) });
+    rows.push({ k: 'Logo position', v: c.logoPos.charAt(0).toUpperCase() + c.logoPos.slice(1) });
+  }
   return rows;
 }
 

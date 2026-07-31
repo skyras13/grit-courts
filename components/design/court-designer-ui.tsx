@@ -10,6 +10,7 @@ import {
   BBALL_OVERLAYS,
   DEFAULT_DESIGN,
   LOGO_PRESETS,
+  LOGO_POSITIONS,
   SPORT_ZONES,
   SURFACE_COLORS,
   colorName,
@@ -17,6 +18,7 @@ import {
   type CourtSizeOpt,
   type DesignConfig,
   type LogoKey,
+  type LogoPos,
   type Sport,
   type ZoneKey,
 } from '@/lib/court-designer';
@@ -52,6 +54,7 @@ export function CourtDesignerUI() {
   const setSize = (size: CourtSizeOpt) => setDesign((d) => ({ ...d, size }));
   const setBball = (bball: BasketballOverlay) => setDesign((d) => ({ ...d, bball }));
   const setLogo = (logo: LogoKey) => setDesign((d) => ({ ...d, logo }));
+  const setLogoPos = (logoPos: LogoPos) => setDesign((d) => ({ ...d, logoPos }));
 
   function onUploadLogo(e: React.ChangeEvent<HTMLInputElement>) {
     const f = e.target.files?.[0];
@@ -168,6 +171,18 @@ export function CourtDesignerUI() {
             )}
           </div>
           <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={onUploadLogo} />
+          {design.logo !== 'none' && (
+            <div className="mt-3">
+              <div className="mb-1.5 text-[11.5px] font-bold uppercase tracking-wide text-muted-faint">Position</div>
+              <div className="flex flex-wrap gap-2">
+                {LOGO_POSITIONS.map((p) => (
+                  <Pill key={p.key} active={design.logoPos === p.key} onClick={() => setLogoPos(p.key)}>
+                    {p.label}
+                  </Pill>
+                ))}
+              </div>
+            </div>
+          )}
         </Group>
       </div>
     </div>
