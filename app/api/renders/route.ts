@@ -46,7 +46,8 @@ export async function POST(request: Request) {
   const file = form.get('image');
   const courtTypeRaw = String(form.get('courtType') ?? 'pickleball');
   const leadId = form.get('leadId') ? String(form.get('leadId')) : undefined;
-  const detail = form.get('detail') ? String(form.get('detail')).slice(0, 400) : undefined;
+  const detail = form.get('detail') ? String(form.get('detail')).slice(0, 500) : undefined;
+  const view = String(form.get('view') ?? 'natural') === 'aerial' ? 'aerial' : 'natural';
   const courtType: CourtType = (COURT_TYPES as readonly string[]).includes(courtTypeRaw)
     ? (courtTypeRaw as CourtType)
     : 'pickleball';
@@ -85,7 +86,7 @@ export async function POST(request: Request) {
     rendered_image_url: null,
     provider: env.RENDER_PROVIDER,
     model: null,
-    prompt: buildPrompt(courtType, detail),
+    prompt: buildPrompt(courtType, detail, view),
     status: 'processing',
     error: null,
     latency_ms: null,
@@ -106,6 +107,7 @@ export async function POST(request: Request) {
       imageUrl: stored.signedUrl ?? SAMPLE_RENDERS[courtType],
       courtType,
       detail,
+      view,
     });
     await updateRender(render.id, {
       status: 'done',

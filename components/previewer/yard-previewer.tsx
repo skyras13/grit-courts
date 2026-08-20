@@ -20,6 +20,7 @@ export function YardPreviewer() {
   const [consent, setConsent] = useState(false);
   const [design, setDesign] = useState<DesignConfig>(DEFAULT_DESIGN);
   const [aiUrl, setAiUrl] = useState<string | null>(null);
+  const [view, setView] = useState<'natural' | 'aerial'>('natural');
   const [error, setError] = useState<string | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
 
@@ -58,6 +59,7 @@ export function YardPreviewer() {
       form.append('image', new File([body], 'yard.jpg', { type: body.type || 'image/jpeg' }));
       form.append('courtType', toLeadCourtType(design.sport));
       form.append('detail', designDetail(design));
+      form.append('view', view);
       // The render runs synchronously server-side and returns the image URL
       // directly (no polling — reliable on serverless).
       const res = await fetch('/api/renders', { method: 'POST', body: form });
@@ -67,7 +69,7 @@ export function YardPreviewer() {
       }
       setAiUrl(data.renderedImageUrl);
       setPhase('done');
-      track('previewer_render_done', { sport: design.sport });
+      track('previewer_render_done', { sport: design.sport, view });
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Render failed.');
       setPhase('failed');
@@ -109,7 +111,22 @@ export function YardPreviewer() {
               <CourtThumbnail config={design} />
             </div>
             {phase === 'ready' ? (
-              <div className="absolute inset-x-0 bottom-4 z-[3] flex flex-col items-center gap-2">
+              <div className="absolute inset-x-0 bottom-4 z-[3] flex flex-col items-center gap-2.5">
+                <div className="flex items-center gap-1 rounded-full bg-slate-900/75 p-1 backdrop-blur">
+                  {(['natural', 'aerial'] as const).map((v) => (
+                    <button
+                      key={v}
+                      onClick={() => setView(v)}
+                      aria-pressed={view === v}
+                      className={
+                        'rounded-full px-3.5 py-1.5 text-[12.5px] font-bold transition ' +
+                        (view === v ? 'bg-white text-ink' : 'text-white/80 hover:text-white')
+                      }
+                    >
+                      {v === 'natural' ? 'Eye-level photo' : 'Drone / aerial'}
+                    </button>
+                  ))}
+                </div>
                 <button onClick={generateAI} className="rounded-full bg-brand-600 px-6 py-3.5 text-[14px] font-bold text-white shadow-lift transition hover:bg-brand-700">
                   ✨ Make it photorealistic
                 </button>

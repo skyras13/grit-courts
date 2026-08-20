@@ -3,6 +3,7 @@
  * consistent schema (LocalBusiness, Service, FAQ, BreadcrumbList). Validated
  * against Google's Rich Results test. See docs/02-strategy/seo-strategy.md.
  */
+import type { Metadata } from 'next';
 import { COMPANY } from './site';
 import { siteUrl } from './env';
 import type { Faq } from './site';
@@ -85,4 +86,42 @@ export function JsonLd({ data }: { data: object }) {
       dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
     />
   );
+}
+
+/**
+ * Page metadata with a canonical URL and full Open Graph / Twitter tags.
+ *
+ * The live Square site ships no canonical at all and has four pages with no
+ * <title> whatsoever, which is a large part of why it doesn't rank. Routing every
+ * page through one helper makes that class of bug impossible.
+ */
+export function buildMetadata(opts: {
+  title: string;
+  description: string;
+  path: string;
+  image?: string;
+  noIndex?: boolean;
+}): Metadata {
+  const url = `${siteUrl}${opts.path === '/' ? '' : opts.path}`;
+  const image = opts.image ?? '/photos/court-01.jpg';
+  return {
+    title: opts.title,
+    description: opts.description,
+    alternates: { canonical: url },
+    robots: opts.noIndex ? { index: false, follow: false } : { index: true, follow: true },
+    openGraph: {
+      type: 'website',
+      url,
+      siteName: COMPANY.name,
+      title: opts.title,
+      description: opts.description,
+      images: [{ url: `${siteUrl}${image}`, width: 1200, height: 630, alt: opts.title }],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: opts.title,
+      description: opts.description,
+      images: [`${siteUrl}${image}`],
+    },
+  };
 }

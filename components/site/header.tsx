@@ -85,6 +85,9 @@ export function Header() {
             <Link href="/preview" onClick={() => setMenu(false)} className="rounded-lg px-3 py-2.5 text-base font-semibold text-ink hover:bg-cream">
               See It In Your Yard
             </Link>
+            <Link href="/planner" onClick={() => setMenu(false)} className="rounded-lg px-3 py-2.5 text-base font-semibold text-ink hover:bg-cream">
+              Will It Fit? Yard Planner
+            </Link>
             <button onClick={() => { setMenu(false); open({ source: 'header-mobile' }); }} className="mt-2 rounded-md bg-brand-600 px-5 py-3 font-bold text-white">
               Get a Quote Here!
             </button>

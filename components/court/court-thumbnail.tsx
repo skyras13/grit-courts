@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { drawCourt, COURT_W, COURT_H } from '@/lib/court-canvas';
+import { drawCourt, courtPixelSize } from '@/lib/court-canvas';
 import { LOGO_SRC, type DesignConfig } from '@/lib/court-designer';
 import { cn } from '@/lib/utils';
 
@@ -21,16 +21,18 @@ export function CourtThumbnail({ config, className }: { config: DesignConfig; cl
     img.src = src;
   }, [config.logo, config.customLogoUrl]);
 
+  const { w, h } = courtPixelSize(config.pad);
+
   useEffect(() => {
     const ctx = canvasRef.current?.getContext('2d');
     if (ctx) drawCourt(ctx, config, logo);
-  }, [config, logo]);
+  }, [config, logo, w, h]);
 
   return (
     <canvas
       ref={canvasRef}
-      width={COURT_W}
-      height={COURT_H}
+      width={w}
+      height={h}
       className={cn('h-auto w-full rounded-lg', className)}
       aria-label={`${config.sport} court design`}
     />

@@ -8,13 +8,15 @@
 import 'server-only';
 import { env } from '../env';
 import type { CourtType } from '../types';
-import { buildPrompt, NEGATIVE_PROMPT, PROMPT_STRENGTH } from './prompt';
+import { buildPrompt, NEGATIVE_PROMPT, PROMPT_STRENGTH, type RenderView } from './prompt';
 
 export interface RenderRequest {
   imageUrl: string;
   courtType: CourtType;
   /** Extra design detail (colors, size, add-ons) appended to the prompt. */
   detail?: string;
+  /** Aerial (drone/satellite) or natural (eye-level) framing. */
+  view?: RenderView;
 }
 
 export interface RenderResult {
@@ -67,7 +69,7 @@ async function renderWithReplicate(req: RenderRequest, prompt: string): Promise<
         prompt,
         image: req.imageUrl,
         negative_prompt: NEGATIVE_PROMPT,
-        prompt_strength: PROMPT_STRENGTH,
+        prompt_strength: PROMPT_STRENGTH[req.view ?? 'natural'],
         num_outputs: 1,
         output_format: 'webp',
         output_quality: 90,
@@ -129,7 +131,7 @@ async function renderWithFal(req: RenderRequest, prompt: string): Promise<Render
     body: JSON.stringify({
       prompt,
       image_url: req.imageUrl,
-      strength: PROMPT_STRENGTH,
+      strength: PROMPT_STRENGTH[req.view ?? 'natural'],
       num_images: 1,
     }),
   });
@@ -154,7 +156,7 @@ async function renderWithMock(req: RenderRequest, prompt: string): Promise<Rende
 }
 
 export async function renderCourt(req: RenderRequest): Promise<RenderResult> {
-  const prompt = buildPrompt(req.courtType, req.detail);
+  const prompt = buildPrompt(req.courtType, req.detail, req.view ?? 'natural');
   switch (env.RENDER_PROVIDER) {
     case 'replicate':
       return renderWithReplicate(req, prompt);

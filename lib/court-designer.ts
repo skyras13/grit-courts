@@ -7,6 +7,7 @@
  * handed to the AI previewer, which composites it into a photo of the yard.
  */
 import type { CourtType as LeadCourtType } from './types';
+import { PADS, type PadId } from './court-geometry';
 
 export type Sport = 'pickleball' | 'basketball' | 'tennis';
 
@@ -51,7 +52,14 @@ export function colorRgb(id: string): string {
 }
 
 /** Zone = an independently-colorable region of a court. */
-export type ZoneKey = 'border' | 'court' | 'kitchen' | 'threePoint' | 'topOfKey' | 'key';
+export type ZoneKey =
+  | 'border'
+  | 'court'
+  | 'kitchen'
+  | 'threePoint'
+  | 'topOfKey'
+  | 'key'
+  | 'centreCircle';
 
 export interface ZoneDef {
   key: ZoneKey;
@@ -59,7 +67,7 @@ export interface ZoneDef {
 }
 
 /** Which zones each sport exposes (mirrors the live designer's controls). */
-export const SPORT_ZONES: Record<Sport, ZoneDef[]> = {
+export const SPORT_ZONES: Record<Sport | 'basketballFull', ZoneDef[]> = {
   pickleball: [
     { key: 'border', label: 'Border' },
     { key: 'court', label: 'Court' },
@@ -70,6 +78,15 @@ export const SPORT_ZONES: Record<Sport, ZoneDef[]> = {
     { key: 'threePoint', label: 'Three Point' },
     { key: 'topOfKey', label: 'Top of Key' },
     { key: 'key', label: 'Key' },
+  ],
+  // Full-court adds the court field + centre circle, exactly as GRIT's designer does.
+  basketballFull: [
+    { key: 'border', label: 'Border' },
+    { key: 'court', label: 'Court' },
+    { key: 'threePoint', label: 'Three Point' },
+    { key: 'topOfKey', label: 'Top of Key' },
+    { key: 'key', label: 'Key' },
+    { key: 'centreCircle', label: 'Centre Circle' },
   ],
   tennis: [
     { key: 'border', label: 'Border' },
@@ -86,6 +103,12 @@ export const BBALL_OVERLAYS: { key: BasketballOverlay; label: string }[] = [
 ];
 
 export type CourtSizeOpt = 'half' | 'full';
+
+/** The zones a given design actually exposes. */
+export function zonesFor(c: Pick<DesignConfig, 'sport' | 'size'>): ZoneDef[] {
+  if (c.sport === 'basketball' && c.size === 'full') return SPORT_ZONES.basketballFull;
+  return SPORT_ZONES[c.sport];
+}
 
 export type LogoKey = 'none' | 'jumpman' | 'byu' | 'utah' | 'custom';
 
@@ -115,6 +138,8 @@ export const LOGO_SRC: Record<Exclude<LogoKey, 'none' | 'custom'>, string> = {
 
 export interface DesignConfig {
   sport: Sport;
+  /** Which concrete pad the court sits on (drives true aspect ratio). */
+  pad: PadId;
   /** Zone colors keyed by ZoneKey (only the sport's zones are used). */
   zones: Record<ZoneKey, string>;
   size: CourtSizeOpt; // basketball only
@@ -127,6 +152,7 @@ export interface DesignConfig {
 
 export const DEFAULT_DESIGN: DesignConfig = {
   sport: 'pickleball',
+  pad: 'standard',
   zones: {
     border: 'competition-green',
     court: 'competition-blue',
@@ -134,6 +160,7 @@ export const DEFAULT_DESIGN: DesignConfig = {
     threePoint: 'competition-blue',
     topOfKey: 'gray',
     key: 'competition-green',
+    centreCircle: 'competition-blue',
   },
   size: 'half',
   bball: 'none',
@@ -166,29 +193,53 @@ export function toLeadCourtType(sport: Sport): LeadCourtType {
 
 /** Rows summarizing the design for the estimate/lead (no price). */
 export function designSummary(c: DesignConfig): { k: string; v: string }[] {
-  const zones = SPORT_ZONES[c.sport];
-  const rows: { k: string; v: string }[] = [{ k: 'Sport', v: SPORT_LABEL[c.sport] }];
+  const pad = PADS[c.pad];
+  const rows: { k: string; v: string }[] = [
+    { k: 'Sport', v: SPORT_LABEL[c.sport] },
+    { k: 'Pad size', v: `${pad.widthFt}\u2032 \u00d7 ${pad.lengthFt}\u2032` },
+  ];
   if (c.sport === 'basketball') rows.push({ k: 'Size', v: c.size === 'full' ? 'Full court' : 'Half court' });
-  for (const z of zones) rows.push({ k: z.label, v: colorName(c.zones[z.key]) });
-  if (c.sport === 'pickleball' && c.bball !== 'none') rows.push({ k: 'Basketball lines', v: c.bball });
+  for (const z of zonesFor(c)) rows.push({ k: z.label, v: colorName(c.zones[z.key]) });
+  if (c.sport === 'pickleball' && c.bball !== 'none') {
+    rows.push({ k: 'Basketball lines', v: c.bball.charAt(0).toUpperCase() + c.bball.slice(1) });
+  }
   if (c.logo !== 'none') {
-    rows.push({ k: 'Logo', v: c.logo === 'custom' ? 'Custom upload' : SPORT_LABEL_LOGO(c.logo) });
+    rows.push({ k: 'Logo', v: c.logo === 'custom' ? 'Custom upload' : logoLabel(c.logo) });
     rows.push({ k: 'Logo position', v: c.logoPos.charAt(0).toUpperCase() + c.logoPos.slice(1) });
   }
   return rows;
 }
 
-function SPORT_LABEL_LOGO(k: LogoKey): string {
+function logoLabel(k: LogoKey): string {
   return LOGO_PRESETS.find((l) => l.key === k)?.label ?? '';
 }
 
-/** Rich description for the AI image prompt. */
+/**
+ * Rich description for the AI image prompt. Real dimensions matter here: telling
+ * the model "a 20ft by 44ft court on a 35ft by 60ft slab" produces far better
+ * scale and perspective than "a pickleball court".
+ */
 export function designDetail(c: DesignConfig): string {
-  const zones = SPORT_ZONES[c.sport];
-  const parts = zones.map((z) => `${z.label.toLowerCase()} in ${colorName(c.zones[z.key]).toLowerCase()}`);
-  const sizeStr = c.sport === 'basketball' ? `${c.size === 'full' ? 'full-size' : 'half-'}court ` : '';
+  const pad = PADS[c.pad];
+  const parts = zonesFor(c).map((z) => `${z.label.toLowerCase()} in ${colorName(c.zones[z.key]).toLowerCase()}`);
+  const size =
+    c.sport === 'pickleball'
+      ? 'a regulation 20ft by 44ft pickleball court'
+      : c.sport === 'tennis'
+        ? 'a regulation 36ft by 78ft tennis court'
+        : c.size === 'full'
+          ? 'a full-size 50ft by 84ft basketball court'
+          : 'a regulation half-court basketball setup with a 12ft key and a 19ft 9in three-point arc';
   const overlay =
-    c.sport === 'pickleball' && c.bball !== 'none' ? ` with ${c.bball} basketball key lines added` : '';
-  const logo = c.logo !== 'none' ? ` and a ${c.logo === 'custom' ? 'custom' : SPORT_LABEL_LOGO(c.logo)} center-court logo` : '';
-  return `A ${sizeStr}${SPORT_LABEL[c.sport].toLowerCase()} court with ${parts.join(', ')}, crisp white regulation lines${overlay}${logo}.`;
+    c.sport === 'pickleball' && c.bball !== 'none'
+      ? `, plus ${c.bball} basketball key and three-point lines painted on the same slab with a wall-mounted hoop`
+      : '';
+  const logo =
+    c.logo !== 'none'
+      ? ` A ${c.logo === 'custom' ? 'custom' : logoLabel(c.logo)} logo is painted at ${c.logoPos === 'center' ? 'centre court' : `the ${c.logoPos} of the court`}.`
+      : '';
+  return (
+    `${size} on a ${pad.widthFt}ft by ${pad.lengthFt}ft concrete slab, ` +
+    `finished in acrylic sport coating: ${parts.join(', ')}, with crisp white 2-inch regulation lines${overlay}.${logo}`
+  );
 }

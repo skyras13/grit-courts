@@ -26,6 +26,17 @@ describe('surface colors — parity with courtdesigner.builtwithgrit.com', () =>
     expect(colorName(DEFAULT_DESIGN.zones.court)).toBe('Competition Blue');
     expect(colorName(DEFAULT_DESIGN.zones.kitchen)).toBe('Gray');
   });
+
+  // Their script.js calls:
+  //   setDefaultColorFillsBasketball(background, court, fill, background, court)
+  // so the key deliberately matches the background and only its outline shows.
+  it('mirrors their basketball default mapping exactly', () => {
+    expect(colorName(DEFAULT_DESIGN.zones.threePoint)).toBe('Competition Blue');
+    expect(colorName(DEFAULT_DESIGN.zones.topOfKey)).toBe('Gray');
+    expect(colorName(DEFAULT_DESIGN.zones.key)).toBe('Competition Green');
+    expect(colorName(DEFAULT_DESIGN.zones.centreCircle)).toBe('Competition Blue');
+    expect(DEFAULT_DESIGN.zones.key).toBe(DEFAULT_DESIGN.zones.border);
+  });
 });
 
 describe('sport zones', () => {

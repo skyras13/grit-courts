@@ -6,12 +6,13 @@ import { useRouter } from 'next/navigation';
 import { useEstimate } from '@/components/estimate/estimate-provider';
 import { saveDesign } from '@/lib/config-store';
 import { track } from '@/lib/analytics';
+import { PADS, padsFor } from '@/lib/court-geometry';
 import {
   BBALL_OVERLAYS,
   DEFAULT_DESIGN,
   LOGO_PRESETS,
   LOGO_POSITIONS,
-  SPORT_ZONES,
+  zonesFor,
   SURFACE_COLORS,
   colorName,
   type BasketballOverlay,
@@ -46,12 +47,21 @@ export function CourtDesignerUI() {
   const [design, setDesign] = useState<DesignConfig>(DEFAULT_DESIGN);
   const fileRef = useRef<HTMLInputElement>(null);
 
-  const zones = SPORT_ZONES[design.sport];
+  const zones = zonesFor(design);
+  const pads = padsFor(design.sport, design.size === 'full');
 
-  const setSport = (sport: Sport) => setDesign((d) => ({ ...d, sport }));
+  const setSport = (sport: Sport) =>
+    setDesign((d) => {
+      const allowed = padsFor(sport, d.size === 'full');
+      return { ...d, sport, pad: allowed.includes(d.pad) ? d.pad : allowed[0]! };
+    });
   const setZone = (zone: ZoneKey, colorId: string) =>
     setDesign((d) => ({ ...d, zones: { ...d.zones, [zone]: colorId } }));
-  const setSize = (size: CourtSizeOpt) => setDesign((d) => ({ ...d, size }));
+  const setSize = (size: CourtSizeOpt) =>
+    setDesign((d) => {
+      const allowed = padsFor(d.sport, size === 'full');
+      return { ...d, size, pad: allowed.includes(d.pad) ? d.pad : allowed[0]! };
+    });
   const setBball = (bball: BasketballOverlay) => setDesign((d) => ({ ...d, bball }));
   const setLogo = (logo: LogoKey) => setDesign((d) => ({ ...d, logo }));
   const setLogoPos = (logoPos: LogoPos) => setDesign((d) => ({ ...d, logoPos }));
@@ -113,6 +123,9 @@ export function CourtDesignerUI() {
         <button onClick={() => open({ design, source: 'designer' })} className="rounded-md border-[1.5px] border-brand-200 px-6 py-3 text-[15px] font-bold text-brand-600 transition hover:bg-brand-50">
           Get a quote
         </button>
+        <a href="/planner" className="rounded-md border-[1.5px] border-muted-input px-5 py-3 text-[15px] font-bold text-[#3a4651] transition hover:border-brand-300">
+          Will it fit my yard?
+        </a>
         <span className="text-[13px] text-muted-faint">Free on-site estimate — no pricing games.</span>
       </div>
 
@@ -127,6 +140,19 @@ export function CourtDesignerUI() {
                 </Pill>
               ))}
             </div>
+          </Group>
+        )}
+
+        {pads.length > 1 && (
+          <Group label="Pad Size" value={PADS[design.pad].label + ' ft'}>
+            <div className="flex flex-wrap gap-2">
+              {pads.map((p) => (
+                <Pill key={p} active={design.pad === p} onClick={() => setDesign((d) => ({ ...d, pad: p }))}>
+                  {PADS[p].label}
+                </Pill>
+              ))}
+            </div>
+            <p className="mt-2 text-[12px] leading-relaxed text-muted-faint">{PADS[design.pad].note}</p>
           </Group>
         )}
 

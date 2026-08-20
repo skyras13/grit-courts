@@ -4,7 +4,8 @@ import { useEffect, useMemo, useState } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
 import * as THREE from 'three';
-import { drawCourt, COURT_W, COURT_H } from '@/lib/court-canvas';
+import { drawCourt, courtPixelSize } from '@/lib/court-canvas';
+import { PADS } from '@/lib/court-geometry';
 import { LOGO_SRC, type DesignConfig } from '@/lib/court-designer';
 
 /**
@@ -67,15 +68,16 @@ function CourtSlab({ config }: { config: DesignConfig }) {
   const [logo, setLogo] = useState<HTMLImageElement | null>(null);
 
   // Offscreen canvas + texture, created once.
+  const { w: texW, h: texH } = courtPixelSize(config.pad);
   const { canvas, texture } = useMemo(() => {
     const cv = document.createElement('canvas');
-    cv.width = COURT_W;
-    cv.height = COURT_H;
+    cv.width = texW;
+    cv.height = texH;
     const tx = new THREE.CanvasTexture(cv);
     tx.anisotropy = 8;
     tx.colorSpace = THREE.SRGBColorSpace;
     return { canvas: cv, texture: tx };
-  }, []);
+  }, [texW, texH]);
 
   // Load logo art when the preset/custom URL changes.
   useEffect(() => {
@@ -106,8 +108,13 @@ function CourtSlab({ config }: { config: DesignConfig }) {
 
   useEffect(() => () => texture.dispose(), [texture]);
 
-  // Slab: 16:10 to match the court texture. Top face gets the texture; sides dark.
-  const W = 9.6, D = 6.0, T = 0.32;
+  // Slab matches the pad's real proportions, normalised to 10 units long so the
+  // camera framing holds whether it's a 35x60 residential pad or a 60x120 tennis
+  // court. A squashed slab was why earlier renders never looked like real courts.
+  const pad = PADS[config.pad];
+  const W = 10;
+  const D = (10 * pad.widthFt) / pad.lengthFt;
+  const T = 0.3;
   const materials = useMemo(() => {
     const edge = new THREE.MeshStandardMaterial({ color: '#0b1620', roughness: 0.9 });
     const top = new THREE.MeshStandardMaterial({ map: texture, roughness: 0.72, metalness: 0.02 });
