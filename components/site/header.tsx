@@ -21,6 +21,15 @@ const NAV = [
   { href: '/coatings', label: 'Coatings Products', match: (p: string) => p.startsWith('/coatings') },
 ];
 
+/** Secondary services — real revenue lines, surfaced in the mobile menu and footer. */
+const SECONDARY = [
+  { href: '/epoxy', label: 'Epoxy Flooring' },
+  { href: '/sports-lines', label: 'Sports Line Painting' },
+  { href: '/golf-simulators', label: 'Golf Simulators' },
+  { href: '/faqs', label: 'FAQs' },
+  { href: '/referrals', label: 'Referrals' },
+];
+
 export function Header() {
   const pathname = usePathname() ?? '/';
   const { open } = useEstimate();
@@ -88,6 +97,11 @@ export function Header() {
             <Link href="/planner" onClick={() => setMenu(false)} className="rounded-lg px-3 py-2.5 text-base font-semibold text-ink hover:bg-cream">
               Will It Fit? Yard Planner
             </Link>
+            {SECONDARY.map((n) => (
+              <Link key={n.href} href={n.href} onClick={() => setMenu(false)} className="rounded-lg px-3 py-2.5 text-base font-semibold text-ink hover:bg-cream">
+                {n.label}
+              </Link>
+            ))}
             <button onClick={() => { setMenu(false); open({ source: 'header-mobile' }); }} className="mt-2 rounded-md bg-brand-600 px-5 py-3 font-bold text-white">
               Get a Quote Here!
             </button>
