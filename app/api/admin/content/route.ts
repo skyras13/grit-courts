@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
+import { revalidateTag } from 'next/cache';
 import { requireAdmin } from '@/lib/cms/guard';
 import { getContent, saveContent, resetContent } from '@/lib/cms/store';
+import { CONTENT_TAG } from '@/lib/cms/read';
 import type { SiteContent } from '@/lib/cms/types';
 
 export const runtime = 'nodejs';
@@ -25,7 +27,9 @@ export async function PUT(request: Request) {
     return NextResponse.json({ ok: false, error: 'Content payload looks malformed.' }, { status: 400 });
   }
   try {
-    return NextResponse.json({ ok: true, content: await saveContent(body) });
+    const saved = await saveContent(body);
+    revalidateTag(CONTENT_TAG);
+    return NextResponse.json({ ok: true, content: saved });
   } catch (err) {
     return NextResponse.json(
       { ok: false, error: err instanceof Error ? err.message : 'Save failed.' },
@@ -37,5 +41,7 @@ export async function PUT(request: Request) {
 export async function DELETE() {
   const denied = await requireAdmin();
   if (denied) return denied;
-  return NextResponse.json({ ok: true, content: await resetContent() });
+  const reset = await resetContent();
+  revalidateTag(CONTENT_TAG);
+  return NextResponse.json({ ok: true, content: reset });
 }

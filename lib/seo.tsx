@@ -105,7 +105,9 @@ export function buildMetadata(opts: {
   const url = `${siteUrl}${opts.path === '/' ? '' : opts.path}`;
   const image = opts.image ?? '/photos/court-01.jpg';
   return {
-    title: opts.title,
+    // absolute: the root layout appends "| GRIT Courts" via its template, and
+    // callers already supply a fully-formed title.
+    title: { absolute: opts.title },
     description: opts.description,
     alternates: { canonical: url },
     robots: opts.noIndex ? { index: false, follow: false } : { index: true, follow: true },

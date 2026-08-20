@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { GalleryGrid } from '@/components/gallery/gallery-grid';
+import { readContent } from '@/lib/cms/read';
 
 export const metadata: Metadata = {
   title: 'Our Work — Sport Courts & Backyards Across the Wasatch Front',
@@ -8,7 +9,8 @@ export const metadata: Metadata = {
   alternates: { canonical: '/gallery' },
 };
 
-export default function GalleryPage() {
+export default async function GalleryPage() {
+  const content = await readContent();
   return (
     <div className="mx-auto max-w-content px-5 pb-[clamp(48px,6vw,80px)] pt-[clamp(28px,4vw,56px)] sm:px-7">
       <div className="mb-7 max-w-[640px]">
@@ -18,7 +20,7 @@ export default function GalleryPage() {
           Real backyards, from sloped dirt lots to finished game courts. Filter by what you’re planning.
         </p>
       </div>
-      <GalleryGrid />
+      <GalleryGrid uploaded={content.gallery} />
     </div>
   );
 }

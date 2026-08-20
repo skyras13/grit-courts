@@ -8,6 +8,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${siteUrl}/`, lastModified: now, changeFrequency: 'weekly', priority: 1 },
     { url: `${siteUrl}/preview`, lastModified: now, changeFrequency: 'monthly', priority: 0.9 },
     { url: `${siteUrl}/design`, lastModified: now, changeFrequency: 'monthly', priority: 0.9 },
+    { url: `${siteUrl}/planner`, lastModified: now, changeFrequency: 'monthly', priority: 0.9 },
+    { url: `${siteUrl}/faqs`, lastModified: now, changeFrequency: 'monthly', priority: 0.7 },
     { url: `${siteUrl}/services`, lastModified: now, changeFrequency: 'monthly', priority: 0.8 },
     { url: `${siteUrl}/services/pickleball`, lastModified: now, changeFrequency: 'monthly', priority: 0.8 },
     { url: `${siteUrl}/court-surfacing`, lastModified: now, changeFrequency: 'monthly', priority: 0.7 },

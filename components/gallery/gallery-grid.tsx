@@ -3,11 +3,27 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import { GALLERY, GALLERY_FILTERS } from '@/lib/content';
+import type { GalleryItem } from '@/lib/cms/types';
 import { cn } from '@/lib/utils';
 
-export function GalleryGrid() {
+/** Maps an owner-uploaded photo onto the shape the grid already renders. */
+function fromCms(g: GalleryItem) {
+  return {
+    id: g.id,
+    img: g.url,
+    title: g.colors || g.alt,
+    city: g.city || 'Utah',
+    cat: g.sport === 'multi-sport' ? 'multi' : g.sport,
+    tall: false,
+    uploaded: true as const,
+  };
+}
+
+export function GalleryGrid({ uploaded = [] }: { uploaded?: GalleryItem[] }) {
   const [filter, setFilter] = useState('all');
-  const items = GALLERY.filter((g) => filter === 'all' || g.cat === filter);
+  // Owner uploads lead, so the newest job is the first thing a visitor sees.
+  const all = [...uploaded.map(fromCms), ...GALLERY.map((g) => ({ ...g, uploaded: false as const }))];
+  const items = all.filter((g) => filter === 'all' || g.cat === filter);
 
   return (
     <div>
@@ -30,7 +46,13 @@ export function GalleryGrid() {
       <div className="[column-gap:16px] sm:columns-2 lg:columns-3">
         {items.map((g) => (
           <figure key={g.id} className="relative mb-4 block break-inside-avoid overflow-hidden rounded-lg bg-[#e8eef3]" style={{ aspectRatio: g.tall ? '4 / 5' : '4 / 3' }}>
-            <Image src={g.img} alt={`${g.title} — ${g.city}`} fill sizes="(max-width:640px) 100vw, (max-width:1024px) 50vw, 400px" className="object-cover" />
+            {g.uploaded ? (
+              // Owner uploads can be remote or data URLs, so they bypass next/image.
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={g.img} alt={`${g.title} — ${g.city}`} className="absolute inset-0 h-full w-full object-cover" />
+            ) : (
+              <Image src={g.img} alt={`${g.title} — ${g.city}`} fill sizes="(max-width:640px) 100vw, (max-width:1024px) 50vw, 400px" className="object-cover" />
+            )}
             <figcaption className="pointer-events-none absolute inset-x-0 bottom-0 flex items-end justify-between gap-2 px-3.5 pb-3 pt-8" style={{ background: 'linear-gradient(180deg,rgba(0,0,0,0),rgba(0,0,0,0.6))' }}>
               <span className="text-[13.5px] font-bold text-white">{g.title}</span>
               <span className="whitespace-nowrap text-[12px] text-white/85">{g.city}</span>

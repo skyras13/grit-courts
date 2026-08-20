@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next';
 import { Archivo, Manrope, Newsreader } from 'next/font/google';
 import './globals.css';
 import { Header } from '@/components/site/header';
+import { SpecialBanner } from '@/components/site/special-banner';
 import { Footer } from '@/components/site/footer';
 import { Analytics } from '@/components/site/analytics';
 import { EstimateProvider } from '@/components/estimate/estimate-provider';
@@ -46,6 +47,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <a href="#main" className="skip-link">Skip to content</a>
         <JsonLd data={localBusinessJsonLd()} />
         <EstimateProvider>
+          <SpecialBanner />
           <Header />
           <main id="main" className="flex-1">{children}</main>
           <Footer />

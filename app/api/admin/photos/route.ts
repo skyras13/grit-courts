@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
+import { revalidateTag } from 'next/cache';
 import { requireAdmin } from '@/lib/cms/guard';
 import { getContent, saveContent } from '@/lib/cms/store';
+import { CONTENT_TAG } from '@/lib/cms/read';
 import { getServiceClient, STORAGE_BUCKETS } from '@/lib/supabase';
 import { ACCEPTED_IMAGE_TYPES, MAX_UPLOAD_BYTES } from '@/lib/schemas';
 import type { GalleryItem } from '@/lib/cms/types';
@@ -87,6 +89,7 @@ export async function POST(request: Request) {
     createdAt: new Date().toISOString(),
   };
   const saved = await saveContent({ ...content, gallery: [item, ...content.gallery] });
+  revalidateTag(CONTENT_TAG);
   return NextResponse.json({ ok: true, item, gallery: saved.gallery });
 }
 
@@ -97,5 +100,6 @@ export async function DELETE(request: Request) {
   if (!id) return NextResponse.json({ ok: false, error: 'Missing photo id.' }, { status: 400 });
   const content = await getContent();
   const saved = await saveContent({ ...content, gallery: content.gallery.filter((g) => g.id !== id) });
+  revalidateTag(CONTENT_TAG);
   return NextResponse.json({ ok: true, gallery: saved.gallery });
 }
