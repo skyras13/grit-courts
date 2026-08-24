@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
+import { VERIFIED } from '@/lib/verified';
 import { HomeHero } from '@/components/home/home-hero';
 import { WhiteLink, OutlineLightLink, UnderlineLink } from '@/components/ui/buttons';
 import { FEATURED_SERVICES, INDEX_SERVICES, WORK, PROCESS, PULL_QUOTE, PHOTOS } from '@/lib/content';
@@ -65,7 +66,7 @@ export default function HomePage() {
               </div>
               <div className="flex items-baseline justify-between gap-3">
                 <span className="font-display text-[22px] font-extrabold">{s.name}</span>
-                <span className="whitespace-nowrap text-[13.5px] font-bold text-brand-600">{s.price}</span>
+                {VERIFIED.prices && <span className="whitespace-nowrap text-[13.5px] font-bold text-brand-600">{s.price}</span>}
               </div>
               <p className="mt-2 text-[14.5px] leading-snug text-muted">{s.hook}</p>
             </Link>
@@ -78,7 +79,7 @@ export default function HomePage() {
               <span className="text-[13px] font-bold text-[#b0b8c0]">{s.num}</span>
               <span className="font-display text-[18px] font-bold">{s.name}</span>
               <span className="hidden text-[14px] text-muted sm:block">{s.hook}</span>
-              <span className="whitespace-nowrap text-[13.5px] font-bold text-brand-600">{s.price}</span>
+              {VERIFIED.prices && <span className="whitespace-nowrap text-[13.5px] font-bold text-brand-600">{s.price}</span>}
               <span className="font-display text-[15px] font-bold text-[#b0b8c0]">→</span>
             </Link>
           ))}
@@ -160,7 +161,7 @@ export default function HomePage() {
         <div className="mx-auto max-w-[1100px] px-5 py-[clamp(56px,8vw,108px)] text-center sm:px-7">
           <h2 className="font-display text-[clamp(30px,5vw,58px)] font-extrabold leading-[1.0] text-white">Let’s see it in your yard.</h2>
           <p className="mx-auto mt-5 max-w-[560px] text-[17px] leading-snug text-[#d2e0ee]">
-            Start with a photo or a 3D design and get a real estimate in minutes — no salesperson, no pressure.
+            Start with a photo or a 3D design, then book a free on-site estimate — no salesperson, no pressure.
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-3.5">
             <WhiteLink href="/preview">See it in your yard</WhiteLink>

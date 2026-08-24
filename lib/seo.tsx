@@ -5,6 +5,7 @@
  */
 import type { Metadata } from 'next';
 import { COMPANY } from './site';
+import { VERIFIED } from './verified';
 import { siteUrl } from './env';
 import type { Faq } from './site';
 import type { CitySeed } from './cities-data';
@@ -34,11 +35,17 @@ export function localBusinessJsonLd(city?: CitySeed) {
       '@type': 'Place',
       name: n,
     })),
-    aggregateRating: {
-      '@type': 'AggregateRating',
-      ratingValue: COMPANY.rating.value,
-      reviewCount: COMPANY.rating.count,
-    },
+    // Never publish a rating we cannot evidence — fake review schema is a Google
+    // spam-policy violation and can get the whole domain demoted.
+    ...(VERIFIED.rating
+      ? {
+          aggregateRating: {
+            '@type': 'AggregateRating',
+            ratingValue: COMPANY.rating.value,
+            reviewCount: COMPANY.rating.count,
+          },
+        }
+      : {}),
     sameAs: [COMPANY.social.facebook, COMPANY.social.instagram],
   };
 }

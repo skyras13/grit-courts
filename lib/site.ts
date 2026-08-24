@@ -13,8 +13,11 @@ export const COMPANY = {
   tagline: 'Utah’s trusted court builders',
   // The live site doesn't publish a phone (form/email + Facebook driven).
   // Real inbox is grant@ / sales@builtwithgrit.com. Phone is a placeholder.
-  phone: '(801) 555-0142', // PLACEHOLDER — owner to provide a real/tracking number
-  phoneHref: 'tel:+18015550142',
+  // Left blank deliberately. The live site publishes no phone either, and a
+  // placeholder number damages local-search NAP consistency and strands callers.
+  // Set both when the owner supplies a real (ideally call-tracking) number.
+  phone: '',
+  phoneHref: '',
   email: 'grant@builtwithgrit.com', // real — owner inbox
   salesEmail: 'sales@builtwithgrit.com', // real
   city: 'Provo',

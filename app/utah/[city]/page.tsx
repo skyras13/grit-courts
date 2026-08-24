@@ -9,6 +9,7 @@ import { Stars } from '@/components/ui/stars';
 import { getAllCitySlugs, getCity } from '@/lib/cities';
 import { cityIntro, cityFaqs, nearbyCities } from '@/lib/city-content';
 import { SERVICES, COMPANY, TESTIMONIALS } from '@/lib/site';
+import { VERIFIED } from '@/lib/verified';
 import { HERO_PAIR } from '@/lib/samples';
 import {
   JsonLd,
@@ -36,10 +37,10 @@ export async function generateMetadata({
   const city = await getCity(slug);
   if (!city) return {};
   const title = `${city.name} Pickleball & Sport Court Builder | GRIT Courts`;
-  const description = `Custom backyard pickleball, basketball, and multi-sport court construction in ${city.name}, ${city.county}. Local ${COMPANY.rating.value}★ builder. See your court with our AI previewer and get an instant price range.`;
+  const description = `Custom backyard pickleball, basketball, and multi-sport court construction in ${city.name}, ${city.county}. See your court in a photo of your own yard, then book a free on-site estimate.`;
   const canonical = `${siteUrl}/utah/${city.slug}`;
   return {
-    title,
+    title: { absolute: title },
     description,
     alternates: { canonical },
     openGraph: { title, description, url: canonical },
@@ -53,8 +54,9 @@ export default async function CityPage({ params }: { params: Promise<{ city: str
 
   const faqs = cityFaqs(city);
   const nearby = nearbyCities(city);
-  const localTestimonials = TESTIMONIALS.filter((t) => t.city === city.name);
-  const testimonials = (localTestimonials.length ? localTestimonials : TESTIMONIALS).slice(0, 3);
+  const testimonials = VERIFIED.testimonials
+    ? TESTIMONIALS.filter((t) => t.city === city.name).slice(0, 3)
+    : [];
 
   return (
     <>
@@ -81,7 +83,7 @@ export default async function CityPage({ params }: { params: Promise<{ city: str
               <span className="text-white">{city.name}</span>
             </nav>
             <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-white/12 px-3 py-1.5 text-sm font-semibold">
-              <Stars value={5} className="text-court-200" /> {COMPANY.rating.value}★ · {city.county}
+              {VERIFIED.rating && <><Stars value={5} className="text-court-200" /> {COMPANY.rating.value}★ ·</>} {city.county}
             </div>
             <h1 className="text-balance text-3xl font-extrabold leading-tight sm:text-5xl">
               Custom Sport Courts in {city.name}, Utah
@@ -95,7 +97,7 @@ export default async function CityPage({ params }: { params: Promise<{ city: str
                 Preview a court in {city.name}
               </ButtonLink>
               <ButtonLink href="/estimate" size="lg" className="border border-white/30 bg-white/10 text-white hover:bg-white/20">
-                Get an instant estimate
+                Get a free estimate
               </ButtonLink>
             </div>
           </div>
@@ -128,7 +130,7 @@ export default async function CityPage({ params }: { params: Promise<{ city: str
             {SERVICES.map((s) => (
               <article key={s.slug} className="rounded-xl border border-border bg-white p-6 shadow-card">
                 <h3 className="text-lg">{s.name}</h3>
-                <p className="mt-1 text-sm font-semibold text-court-600">{s.priceFrom}</p>
+                {VERIFIED.prices && <p className="mt-1 text-sm font-semibold text-court-600">{s.priceFrom}</p>}
                 <p className="mt-3 text-sm leading-relaxed text-fg-muted">{s.short}</p>
               </article>
             ))}
@@ -136,7 +138,8 @@ export default async function CityPage({ params }: { params: Promise<{ city: str
         </Container>
       </Section>
 
-      {/* Testimonials */}
+      {/* Testimonials — rendered only when we have a real, attributable review */}
+      {testimonials.length > 0 && (
       <Section className="bg-white">
         <Container>
           <SectionHeading eyebrow="Trusted nearby" title={`What ${city.county} homeowners say`} />
@@ -153,6 +156,7 @@ export default async function CityPage({ params }: { params: Promise<{ city: str
           </div>
         </Container>
       </Section>
+      )}
 
       {/* Local FAQ */}
       <Section className="bg-bg-muted">
@@ -193,7 +197,7 @@ export default async function CityPage({ params }: { params: Promise<{ city: str
         <Container className="text-center">
           <h2 className="text-3xl text-white">Ready for a court in {city.name}?</h2>
           <p className="mx-auto mt-3 max-w-lg text-brand-100">
-            See it in your yard and get an honest price range in 60 seconds.
+            See it in your yard, then book a free on-site estimate.
           </p>
           <div className="mt-7 flex flex-col justify-center gap-3 sm:flex-row">
             <ButtonLink href="/preview" variant="court" size="lg" className="font-bold">

@@ -6,6 +6,8 @@ import { Court3D } from '@/components/court/court-3d';
 import { NavyLink, UnderlineLink } from '@/components/ui/buttons';
 import { PALETTES, HERO_PALETTES } from '@/lib/configurator';
 import { PHOTOS } from '@/lib/content';
+import { COMPANY } from '@/lib/site';
+import { VERIFIED } from '@/lib/verified';
 import { cn } from '@/lib/utils';
 
 export function HomeHero() {
@@ -44,12 +46,15 @@ export function HomeHero() {
             )}
           </div>
           <div className="flex flex-wrap items-center gap-[18px] border-t border-muted-line pt-6">
-            <span className="flex items-center gap-1.5">
-              <span className="tracking-[1px] text-gold">★★★★★</span>
-              <span className="text-[13.5px] font-bold text-ink">4.8</span>
-            </span>
-            <span className="text-[13px] text-muted-soft">20+ courts built</span>
-            <span className="text-[13px] text-muted-soft">HBA member</span>
+            {VERIFIED.rating && (
+              <span className="flex items-center gap-1.5">
+                <span className="tracking-[1px] text-gold">★★★★★</span>
+                <span className="text-[13.5px] font-bold text-ink">{COMPANY.rating.value}</span>
+              </span>
+            )}
+            <span className="text-[13px] text-muted-soft">{COMPANY.courtsBuilt} courts built</span>
+            {VERIFIED.memberships && <span className="text-[13px] text-muted-soft">HBA member</span>}
+            <span className="text-[13px] text-muted-soft">Licensed &amp; insured</span>
             <span className="text-[13px] text-muted-soft">Indoor &amp; outdoor</span>
           </div>
         </div>

@@ -44,7 +44,11 @@ export function Footer() {
             built, and warrantied by one crew.
           </p>
           <div className="text-[13.5px] text-[#aab4be]">
-            <a href={COMPANY.phoneHref} className="hover:text-white">{COMPANY.phone}</a> ·{' '}
+            {COMPANY.phone && (
+              <>
+                <a href={COMPANY.phoneHref} className="hover:text-white">{COMPANY.phone}</a> ·{' '}
+              </>
+            )}
             <a href={`mailto:${COMPANY.email}`} className="hover:text-white">{COMPANY.email}</a>
           </div>
         </div>

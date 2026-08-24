@@ -55,10 +55,10 @@ export default async function ThankYouPage({
             See your court in your yard
           </ButtonLink>
           <a
-            href={COMPANY.phoneHref}
+            href={COMPANY.phone ? COMPANY.phoneHref : `mailto:${COMPANY.email}`}
             className="inline-flex h-12 items-center justify-center rounded-lg border border-brand-200 px-6 font-semibold text-brand-700 hover:bg-brand-50"
           >
-            Or call {COMPANY.phone}
+            {COMPANY.phone ? `Or call ${COMPANY.phone}` : 'Or email us'}
           </a>
         </div>
       </Container>

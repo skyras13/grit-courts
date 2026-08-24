@@ -22,7 +22,7 @@ export function cityFaqs(city: CitySeed): Faq[] {
   return [
     {
       q: `How much does a backyard court cost in ${city.name}?`,
-      a: `Most ${city.name} backyard pickleball courts run about $20,000–$32,000, with multi-sport courts higher. ${city.name} sites vary — ${city.lots.toLowerCase()} Use our estimator for a tailored range, then we confirm it on a free on-site visit.`,
+      a: `It depends on the slab. Resurfacing sound existing concrete is the cheapest route; a new engineered base with surfacing, fencing and lights is the most involved. ${city.name} sites vary — ${city.lots} We give you a firm number after walking the property, not a guess from a photo.`,
     },
     {
       q: `Do you build courts throughout ${city.county}?`,

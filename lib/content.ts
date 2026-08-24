@@ -94,7 +94,7 @@ export const WORK: WorkItem[] = [
 
 export const PROCESS = [
   { n: '01', title: 'Walk the yard', desc: 'A free on-site visit to measure, assess grade, and talk through how you want to use the space.' },
-  { n: '02', title: 'See it first', desc: 'Preview a finished court in a photo of your yard, or design every detail in 3D with a live estimate.' },
+  { n: '02', title: 'See it first', desc: 'Preview a finished court in a photo of your yard, or design every detail in 3D and send us the exact spec.' },
   { n: '03', title: 'One crew builds it', desc: 'Excavation, engineered base, concrete, surfacing, and lines — handled end to end, no subs to chase.' },
   { n: '04', title: 'Play for years', desc: 'Final coat, fresh lines, and a surface built to last. Then it is game on.' },
 ];
