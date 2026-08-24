@@ -23,7 +23,7 @@ export default async function ThankYouPage({
   return (
     <Section className="bg-bg-muted">
       <Container className="max-w-2xl text-center">
-        <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-kelly-500 text-white">
+        <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-grit-600 text-white">
           <svg width="32" height="32" viewBox="0 0 24 24" fill="none" aria-hidden="true">
             <path d="M20 6L9 17l-5-5" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
@@ -38,7 +38,7 @@ export default async function ThankYouPage({
 
         {hasEstimate && (
           <div className="mx-auto mt-8 max-w-sm rounded-xl border border-border bg-white p-6 shadow-card">
-            <p className="text-sm font-semibold uppercase tracking-wide text-court-600">
+            <p className="text-sm font-semibold uppercase tracking-wide text-brand-600">
               Your estimated range
             </p>
             <p className="mt-1 text-3xl font-extrabold text-brand-700">

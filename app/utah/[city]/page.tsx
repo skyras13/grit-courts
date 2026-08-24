@@ -11,6 +11,7 @@ import { cityIntro, cityFaqs, nearbyCities } from '@/lib/city-content';
 import { SERVICES, COMPANY, TESTIMONIALS } from '@/lib/site';
 import { VERIFIED } from '@/lib/verified';
 import { HERO_PAIR } from '@/lib/samples';
+import Image from 'next/image';
 import {
   JsonLd,
   localBusinessJsonLd,
@@ -83,7 +84,7 @@ export default async function CityPage({ params }: { params: Promise<{ city: str
               <span className="text-white">{city.name}</span>
             </nav>
             <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-white/12 px-3 py-1.5 text-sm font-semibold">
-              {VERIFIED.rating && <><Stars value={5} className="text-court-200" /> {COMPANY.rating.value}★ ·</>} {city.county}
+              {VERIFIED.rating && <><Stars value={5} className="text-brand-200" /> {COMPANY.rating.value}★ ·</>} {city.county}
             </div>
             <h1 className="text-balance text-3xl font-extrabold leading-tight sm:text-5xl">
               Custom Sport Courts in {city.name}, Utah
@@ -101,12 +102,28 @@ export default async function CityPage({ params }: { params: Promise<{ city: str
               </ButtonLink>
             </div>
           </div>
-          <BeforeAfter
-            beforeSrc={HERO_PAIR.before}
-            afterSrc={HERO_PAIR.after}
-            beforeAlt={`A backyard in ${city.name} before a court`}
-            afterAlt={`A finished court in ${city.name}`}
-          />
+          {/* A before/after slider asserts both frames are the same property.
+              Until the owner supplies genuine matched pairs we show one real
+              photo instead of implying a transformation we can't evidence. */}
+          {VERIFIED.beforeAfter ? (
+            <BeforeAfter
+              beforeSrc={HERO_PAIR.before}
+              afterSrc={HERO_PAIR.after}
+              beforeAlt={`A backyard in ${city.name} before a court`}
+              afterAlt={`A finished court in ${city.name}`}
+            />
+          ) : (
+            <figure className="relative overflow-hidden rounded-xl shadow-lift" style={{ aspectRatio: '4 / 3' }}>
+              <Image
+                src={HERO_PAIR.after}
+                alt={`A finished GRIT court, the kind we build for ${city.name} homes`}
+                fill
+                priority
+                sizes="(min-width: 1024px) 50vw, 100vw"
+                className="object-cover"
+              />
+            </figure>
+          )}
         </Container>
       </section>
 
@@ -130,7 +147,7 @@ export default async function CityPage({ params }: { params: Promise<{ city: str
             {SERVICES.map((s) => (
               <article key={s.slug} className="rounded-xl border border-border bg-white p-6 shadow-card">
                 <h3 className="text-lg">{s.name}</h3>
-                {VERIFIED.prices && <p className="mt-1 text-sm font-semibold text-court-600">{s.priceFrom}</p>}
+                {VERIFIED.prices && <p className="mt-1 text-sm font-semibold text-brand-600">{s.priceFrom}</p>}
                 <p className="mt-3 text-sm leading-relaxed text-fg-muted">{s.short}</p>
               </article>
             ))}

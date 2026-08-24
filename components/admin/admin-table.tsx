@@ -7,10 +7,10 @@ import { formatUsd } from '@/lib/pricing';
 import { cn } from '@/lib/utils';
 
 const STATUS_STYLE: Record<LeadStatus, string> = {
-  new: 'bg-court-100 text-court-800',
+  new: 'bg-brand-100 text-brand-800',
   contacted: 'bg-amber-100 text-amber-800',
   quoted: 'bg-violet-100 text-violet-800',
-  won: 'bg-kelly-400/30 text-kelly-600',
+  won: 'bg-grit-500/30 text-grit-600',
   lost: 'bg-slate-100 text-slate-600',
 };
 
@@ -63,7 +63,7 @@ export function AdminTable({
                   <a href={`tel:${l.phone}`} className="block text-brand-700">{l.phone}</a>
                   {l.email && <div className="text-fg-muted">{l.email}</div>}
                   {l.property_address && <div className="text-xs text-fg-muted">{l.property_address}</div>}
-                  {l.sms_consent && <span className="mt-1 inline-block rounded bg-kelly-400/20 px-1.5 text-xs text-kelly-600">SMS OK</span>}
+                  {l.sms_consent && <span className="mt-1 inline-block rounded bg-grit-500/20 px-1.5 text-xs text-grit-600">SMS OK</span>}
                 </td>
                 <td className="px-4 py-3 text-fg-muted">
                   <div className="capitalize text-ink">{l.court_type ?? '—'}</div>

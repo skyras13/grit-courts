@@ -45,11 +45,6 @@ const config: Config = {
         border: '#e7e2d9',
         fg: { DEFAULT: '#16212f', muted: '#5a6570' },
         'bg-muted': '#f4f2ee',
-        court: {
-          50: '#ecfbff', 100: '#cef4ff', 200: '#a3ecff', 300: '#62dfff', 400: '#1fc8f5',
-          500: '#04a7d8', 600: '#0585b5', 700: '#0b6a92', 800: '#125777', 900: '#144965',
-        },
-        kelly: { 400: '#3ed27a', 500: '#1eb863', 600: '#129a52' },
       },
       fontFamily: {
         display: ['var(--font-archivo)', 'system-ui', 'sans-serif'],
@@ -68,10 +63,17 @@ const config: Config = {
           '0%': { opacity: '0', transform: 'translateY(14px)' },
           '100%': { opacity: '1', transform: 'translateY(0)' },
         },
+        // Menus open downward from their trigger — short, so it reads as
+        // responsiveness rather than decoration.
+        'fade-in-down': {
+          '0%': { opacity: '0', transform: 'translateY(-6px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
         spin360: { to: { transform: 'rotate(360deg)' } },
       },
       animation: {
         'fade-up': 'fade-up 0.55s cubic-bezier(0.16,1,0.3,1) both',
+        'fade-in-down': 'fade-in-down 0.16s cubic-bezier(0.16,1,0.3,1) both',
         spin360: 'spin360 0.8s linear infinite',
       },
     },

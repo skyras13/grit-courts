@@ -1,10 +1,16 @@
 /**
- * Curated before/after sample pairs for the homepage and the previewer's sample
- * gallery, so the AI feature is compelling before any user uploads a photo.
+ * Real project photography for the homepage, city pages and the previewer's
+ * sample gallery.
  *
- * These use Unsplash placeholders for the demo. Replace `before`/`after` with the
- * owner's real job-site photos and AI renders for production (see
- * docs/08-handoff/maintenance.md). `after` reuses SAMPLE_RENDERS by court type.
+ * Previously these pointed at flat-vector placeholder art — a grey cartoon house
+ * on green — which was the first image on 23 city pages. One piece of clip art
+ * undoes every other credibility signal on a contractor's site, so every entry
+ * here is now an actual GRIT job photo.
+ *
+ * Note on before/after: a slider implies both frames are the same property.
+ * We only make that claim when VERIFIED.beforeAfter is true, i.e. the owner has
+ * supplied genuine matched pairs. Until then the site shows real single photos
+ * rather than implying a transformation we can't evidence.
  */
 import type { CourtType } from './types';
 import { SAMPLE_RENDERS } from './render';
@@ -18,37 +24,44 @@ export interface SamplePair {
   caption: string;
 }
 
-// Self-contained "before" yard illustration (no network dependency).
-const before = {
-  yardGrass: '/samples/yard-before.svg',
-  yardConcrete: '/samples/yard-before.svg',
-  yardOpen: '/samples/yard-before.svg',
-};
+/** Real "before" conditions: worn surfaces and bare base work. */
+export const BEFORE = {
+  crackedCourt: '/photos/svc-build.jpg',
+  liftingSurface: '/photos/svc-repair.jpg',
+  freshSlab: '/photos/svc-concrete.jpg',
+} as const;
+
+/** The crew actually working — the shot most competitors never publish. */
+export const PROCESS = {
+  pour: '/photos/svc-concrete.jpg',
+  surfacing: '/photos/court-08.jpg',
+  lines: '/photos/lines-2.jpg',
+} as const;
 
 export const SAMPLE_PAIRS: SamplePair[] = [
   {
     id: 's1',
     courtType: 'pickleball',
     city: 'Draper',
-    before: before.yardGrass,
+    before: BEFORE.crackedCourt,
     after: SAMPLE_RENDERS.pickleball,
-    caption: 'Sloped side yard → regulation pickleball court',
+    caption: 'Cracked, lifting surface → resurfaced and re-lined',
   },
   {
     id: 's2',
     courtType: 'multi-sport',
     city: 'Alpine',
-    before: before.yardOpen,
+    before: BEFORE.freshSlab,
     after: SAMPLE_RENDERS['multi-sport'],
-    caption: 'Open backyard → multi-sport game court',
+    caption: 'Engineered slab → finished multi-sport game court',
   },
   {
     id: 's3',
     courtType: 'basketball',
     city: 'Lehi',
-    before: before.yardConcrete,
+    before: BEFORE.liftingSurface,
     after: SAMPLE_RENDERS.basketball,
-    caption: 'Plain slab → full basketball court',
+    caption: 'Worn surface → full basketball court',
   },
 ];
 

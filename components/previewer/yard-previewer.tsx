@@ -158,7 +158,7 @@ export function YardPreviewer() {
           {error && <p role="alert" className="mt-3 max-w-[620px] rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p>}
           <div className="mt-2.5 text-[13.5px] text-muted-soft">
             No photo handy?{' '}
-            <button onClick={() => startWith('/samples/yard-before.jpg', null)} className="border-b-[1.5px] border-brand-600 font-bold text-brand-600">Try it on a sample yard →</button>
+            <button onClick={() => startWith('/samples/yard-aerial.jpg', null)} className="border-b-[1.5px] border-brand-600 font-bold text-brand-600">Try it on a sample yard →</button>
             {' · '}
             <Link href="/design" className="border-b-[1.5px] border-brand-600 font-bold text-brand-600">Change your design</Link>
           </div>

@@ -79,7 +79,7 @@ export default async function AdminPage({
             Photos, promotions, page text, FAQs, cities and your API keys.
           </span>
         </Link>
-        <a
+        <Link
           href="/"
           className="group rounded-xl border border-border bg-white p-5 shadow-card transition hover:border-brand-300"
         >
@@ -89,7 +89,7 @@ export default async function AdminPage({
           <span className="mt-1 block text-[13px] text-fg-muted">
             See exactly what a customer sees right now.
           </span>
-        </a>
+        </Link>
       </nav>
 
       <h2 className="mt-9 text-lg font-bold">Leads</h2>

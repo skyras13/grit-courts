@@ -69,3 +69,33 @@ describe('heading colour cascade', () => {
     expect(rule).not.toMatch(/color:\s*var\(--ink\)/);
   });
 });
+
+/**
+ * Design-system and navigation invariants found during the UX audit.
+ */
+describe('design system', () => {
+  it('ships one blue, not three competing palettes', async () => {
+    const fs = await import('node:fs/promises');
+    const cfg = await fs.readFile('tailwind.config.ts', 'utf8');
+    // `court` (cyan) and `kelly` (neon green) sat alongside `brand` (navy) and had
+    // leaked into shared UI, so two unrelated blues could appear on one screen.
+    expect(cfg).not.toMatch(/^\s*court:\s*\{/m);
+    expect(cfg).not.toMatch(/^\s*kelly:\s*\{/m);
+    expect(cfg).toMatch(/brand:\s*\{/);
+  });
+
+  it('keeps the primary CTA visible on laptop widths', async () => {
+    const fs = await import('node:fs/promises');
+    const header = await fs.readFile('components/site/header.tsx', 'utf8');
+    // At xl (1280px) the nav and the CTA both collapsed into a hamburger, hiding
+    // the quote button from every 1152px laptop. lg (1024px) keeps it on screen.
+    expect(header).not.toContain('xl:flex');
+    expect(header).toContain('lg:flex');
+  });
+
+  it('does not expose the hero A/B switcher to visitors', async () => {
+    const fs = await import('node:fs/promises');
+    const hero = await fs.readFile('components/home/home-hero.tsx', 'utf8');
+    expect(hero).not.toContain('HeroToggle');
+  });
+});

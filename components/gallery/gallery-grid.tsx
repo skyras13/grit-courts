@@ -45,7 +45,7 @@ export function GalleryGrid({ uploaded = [] }: { uploaded?: GalleryItem[] }) {
 
       <div className="[column-gap:16px] sm:columns-2 lg:columns-3">
         {items.map((g) => (
-          <figure key={g.id} className="relative mb-4 block break-inside-avoid overflow-hidden rounded-lg bg-[#e8eef3]" style={{ aspectRatio: g.tall ? '4 / 5' : '4 / 3' }}>
+          <figure key={g.id} className="relative mb-4 block break-inside-avoid overflow-hidden rounded-lg bg-[#e8eef3] shadow-card transition duration-200 hover:-translate-y-1 hover:shadow-lift" style={{ aspectRatio: g.tall ? '4 / 5' : '4 / 3' }}>
             {g.uploaded ? (
               // Owner uploads can be remote or data URLs, so they bypass next/image.
               // eslint-disable-next-line @next/next/no-img-element

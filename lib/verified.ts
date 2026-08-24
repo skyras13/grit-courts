@@ -20,6 +20,12 @@ export const VERIFIED = {
   prices: false,
   /** Genuine, attributable customer reviews. */
   testimonials: false,
+  /**
+   * Matched before/after pairs from the same property. A slider implies both
+   * frames are one job; until the owner supplies real pairs we show single
+   * photos instead of implying a transformation we can't evidence.
+   */
+  beforeAfter: false,
 } as const;
 
 /** Convenience: should any social-proof strip render at all? */

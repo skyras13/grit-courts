@@ -2,6 +2,8 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { VERIFIED } from '@/lib/verified';
 import { HomeHero } from '@/components/home/home-hero';
+import { TrustBand } from '@/components/home/trust-band';
+import { Reveal } from '@/components/ui/reveal';
 import { WhiteLink, OutlineLightLink, UnderlineLink } from '@/components/ui/buttons';
 import { FEATURED_SERVICES, INDEX_SERVICES, WORK, PROCESS, PULL_QUOTE, PHOTOS } from '@/lib/content';
 import { JsonLd, faqJsonLd } from '@/lib/seo';
@@ -48,7 +50,7 @@ export default function HomePage() {
 
       {/* What we build */}
       <section id="build" className="mx-auto max-w-content scroll-mt-24 px-5 py-[clamp(56px,7vw,100px)] sm:px-7">
-        <div className="mb-11 flex flex-wrap items-end justify-between gap-8">
+        <Reveal className="mb-11 flex flex-wrap items-end justify-between gap-8">
           <h2 className="max-w-[16ch] font-display text-[clamp(30px,4vw,48px)] font-extrabold leading-[1.02]">
             One crew, every kind of court.
           </h2>
@@ -56,12 +58,13 @@ export default function HomePage() {
             Basketball, pickleball, tennis, and multi-sport courts — designed, poured, surfaced, and
             lined end to end. Plus the whole backyard around them.
           </p>
-        </div>
+        </Reveal>
 
         <div className="mb-[18px] grid gap-6 md:grid-cols-3">
-          {FEATURED_SERVICES.map((s) => (
-            <Link key={s.name} href={s.href} className="group flex flex-col text-left">
-              <div className="mb-4 overflow-hidden rounded-md bg-[#e8eef3]" style={{ aspectRatio: '4 / 3' }}>
+          {FEATURED_SERVICES.map((s, i) => (
+            <Reveal key={s.name} delay={i * 80}>
+            <Link href={s.href} className="group flex h-full flex-col text-left transition duration-200 hover:-translate-y-1">
+              <div className="mb-4 overflow-hidden rounded-md bg-[#e8eef3] shadow-card transition duration-200 group-hover:shadow-lift" style={{ aspectRatio: '4 / 3' }}>
                 <Image src={s.img} alt={`${s.name} court`} width={520} height={390} className="h-full w-full object-cover transition duration-500 group-hover:scale-[1.04]" />
               </div>
               <div className="flex items-baseline justify-between gap-3">
@@ -70,6 +73,7 @@ export default function HomePage() {
               </div>
               <p className="mt-2 text-[14.5px] leading-snug text-muted">{s.hook}</p>
             </Link>
+            </Reveal>
           ))}
         </div>
 
@@ -131,16 +135,21 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Pull quote */}
-      <section className="bg-cream">
-        <div className="mx-auto max-w-[900px] px-5 py-[clamp(56px,7vw,96px)] text-center sm:px-7">
-          <div className="mb-6 text-[18px] tracking-[3px] text-gold">★★★★★</div>
-          <p className="font-serif text-[clamp(22px,3.2vw,36px)] font-normal italic leading-[1.3] text-ink">“{PULL_QUOTE.quote}”</p>
-          <div className="mt-6 text-[14.5px] font-bold text-ink">
-            {PULL_QUOTE.name} <span className="font-semibold text-muted-faint">— {PULL_QUOTE.detail}</span>
+      {/* Proof of workmanship. Replaces a five-star pull quote we could not
+          attribute; the quote returns automatically once real ones exist. */}
+      <TrustBand />
+
+      {VERIFIED.testimonials && (
+        <section className="bg-cream">
+          <div className="mx-auto max-w-[900px] px-5 py-[clamp(56px,7vw,96px)] text-center sm:px-7">
+            <div className="mb-6 text-[18px] tracking-[3px] text-gold">★★★★★</div>
+            <p className="font-serif text-[clamp(22px,3.2vw,36px)] font-normal italic leading-[1.3] text-ink">“{PULL_QUOTE.quote}”</p>
+            <div className="mt-6 text-[14.5px] font-bold text-ink">
+              {PULL_QUOTE.name} <span className="font-semibold text-muted-faint">— {PULL_QUOTE.detail}</span>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* Process */}
       <section className="mx-auto max-w-content px-5 py-[clamp(56px,7vw,100px)] sm:px-7">

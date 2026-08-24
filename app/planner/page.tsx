@@ -14,7 +14,7 @@ export default function PlannerPage() {
   return (
     <Container className="py-10">
       <div className="mb-6 max-w-[720px]">
-        <p className="text-[12.5px] font-bold uppercase tracking-[0.14em] text-court-600">Yard planner</p>
+        <p className="text-[12.5px] font-bold uppercase tracking-[0.14em] text-brand-600">Yard planner</p>
         <h1 className="mt-2 font-display text-[clamp(28px,3.6vw,42px)] font-extrabold leading-[1.05]">
           Will a court actually fit in your yard?
         </h1>

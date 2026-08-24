@@ -48,7 +48,7 @@ export default function ServiceAreaPage() {
                         className="flex items-center justify-between rounded-lg border border-border bg-white px-4 py-3 font-semibold text-ink shadow-card transition hover:-translate-y-0.5 hover:border-brand-300 hover:shadow-lift"
                       >
                         {c.name}
-                        <span className="text-court-500" aria-hidden="true">→</span>
+                        <span className="text-brand-600" aria-hidden="true">→</span>
                       </Link>
                     </li>
                   ))}

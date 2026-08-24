@@ -52,7 +52,7 @@ export function BeforeAfter({
     >
       {/* After (full) */}
       <Image src={afterSrc} alt={afterAlt} fill sizes="(max-width:768px) 100vw, 640px" className="object-cover" priority unoptimized={ephemeral(afterSrc)} />
-      <span className="pointer-events-none absolute right-3 top-3 rounded-full bg-court-600/90 px-2.5 py-1 text-xs font-bold text-white">
+      <span className="pointer-events-none absolute right-3 top-3 rounded-full bg-brand-600/90 px-2.5 py-1 text-xs font-bold text-white">
         After
       </span>
 
