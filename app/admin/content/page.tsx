@@ -8,6 +8,7 @@ import { secretStatuses } from '@/lib/cms/secrets';
 import { isDemoMode } from '@/lib/env';
 import { Container } from '@/components/ui/layout';
 import { CmsEditor } from '@/components/admin/cms-editor';
+import { SetupChecklist } from '@/components/admin/setup-checklist';
 
 export const metadata: Metadata = {
   title: 'Manage your site',
@@ -36,6 +37,7 @@ export default async function ManageSitePage() {
           ← Back to leads
         </Link>
       </div>
+      <SetupChecklist content={content} secrets={secrets} />
       <CmsEditor initialContent={content} initialSecrets={secrets} demoMode={isDemoMode} />
     </Container>
   );

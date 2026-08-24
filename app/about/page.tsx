@@ -14,6 +14,7 @@ export default function AboutPage() {
     <Section className="bg-white">
       <Container className="max-w-3xl">
         <SectionHeading
+          as="h1"
           centered={false}
           eyebrow="About us"
           title="Built in Utah, for the way Utah plays."

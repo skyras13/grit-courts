@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import { cookies } from 'next/headers';
 import { ADMIN_COOKIE, verifySessionToken } from '@/lib/admin-auth';
 import { listLeads, listRenders } from '@/lib/repo';
@@ -26,7 +27,9 @@ export default async function AdminPage({
     return (
       <Container className="flex min-h-[70vh] max-w-md flex-col justify-center py-16">
         <h1 className="text-2xl">Owner dashboard</h1>
-        <p className="mt-2 text-sm text-fg-muted">Enter the password to view incoming leads.</p>
+        <p className="mt-2 text-sm text-fg-muted">
+          Sign in to see your leads and manage your site.
+        </p>
         <form method="POST" action="/api/admin/login" className="mt-6 space-y-3">
           <input
             type="password"
@@ -42,8 +45,7 @@ export default async function AdminPage({
           {error && <p role="alert" className="text-sm text-red-600">Incorrect password. Try again.</p>}
         </form>
         <p className="mt-6 text-xs text-fg-muted">
-          v1 uses a shared password (set <code>ADMIN_PASSWORD</code>). Clerk-based accounts are
-          planned — see docs/04-features/feat-owner-dashboard.md.
+          Forgot the password? Contact whoever set up your site and they can reset it.
         </p>
       </Container>
     );
@@ -65,7 +67,33 @@ export default async function AdminPage({
           Sign out
         </a>
       </div>
-      <div className="mt-6">
+      <nav className="mt-7 grid gap-4 sm:grid-cols-2">
+        <Link
+          href="/admin/content"
+          className="group rounded-xl border border-border bg-white p-5 shadow-card transition hover:border-brand-300"
+        >
+          <span className="block text-[15px] font-bold text-ink group-hover:text-brand-600">
+            Manage your site →
+          </span>
+          <span className="mt-1 block text-[13px] text-fg-muted">
+            Photos, promotions, page text, FAQs, cities and your API keys.
+          </span>
+        </Link>
+        <a
+          href="/"
+          className="group rounded-xl border border-border bg-white p-5 shadow-card transition hover:border-brand-300"
+        >
+          <span className="block text-[15px] font-bold text-ink group-hover:text-brand-600">
+            View your site →
+          </span>
+          <span className="mt-1 block text-[13px] text-fg-muted">
+            See exactly what a customer sees right now.
+          </span>
+        </a>
+      </nav>
+
+      <h2 className="mt-9 text-lg font-bold">Leads</h2>
+      <div className="mt-3">
         <AdminTable leads={leads} rendersById={rendersById} />
       </div>
     </Container>

@@ -37,3 +37,19 @@ describe('unverified claims never publish', () => {
     expect(COMPANY.phone).not.toMatch(/555-?01|555-?5555/);
   });
 });
+
+/**
+ * Every page needs exactly one h1. The old Square site had zero on every page,
+ * which is a large part of why it doesn't rank — so shipping the same bug in the
+ * rebuild would be embarrassing. SectionHeading defaults to h2, and a page that
+ * uses it as its main title must opt into h1.
+ */
+describe('page headings', () => {
+  it('pages that title themselves with SectionHeading pass as="h1"', async () => {
+    const fs = await import('node:fs/promises');
+    for (const file of ['app/about/page.tsx', 'app/service-area/page.tsx']) {
+      const src = await fs.readFile(file, 'utf8');
+      expect(src, `${file} must render an h1`).toContain('as="h1"');
+    }
+  });
+});

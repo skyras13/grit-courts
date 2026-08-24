@@ -40,16 +40,24 @@ export function SectionHeading({
   title,
   intro,
   centered = true,
+  as = 'h2',
 }: {
   eyebrow?: string;
   title: ReactNode;
   intro?: ReactNode;
   centered?: boolean;
+  /**
+   * Heading level. Defaults to h2 because this usually labels a section, but a
+   * page whose main title is a SectionHeading must pass "h1" — every page needs
+   * exactly one h1, and hardcoding h2 here silently left /about and
+   * /service-area with none.
+   */
+  as?: 'h1' | 'h2';
 }) {
   return (
     <div className={cn('max-w-2xl', centered && 'mx-auto text-center')}>
       {eyebrow && <Eyebrow>{eyebrow}</Eyebrow>}
-      <h2 className="text-3xl sm:text-4xl">{title}</h2>
+      {createElement(as, { className: 'text-3xl sm:text-4xl' }, title)}
       {intro && <p className="mt-4 text-lg leading-relaxed text-fg-muted">{intro}</p>}
     </div>
   );

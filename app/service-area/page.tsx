@@ -31,6 +31,7 @@ export default function ServiceAreaPage() {
       <Section className="bg-white">
         <Container>
           <SectionHeading
+          as="h1"
             eyebrow="Where we build"
             title="Serving the entire Wasatch Front"
             intro={`Based in ${COMPANY.city}, we design and install custom courts across ${COMPANY.areaServed.length} counties. Find your city below.`}
