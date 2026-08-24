@@ -11,11 +11,19 @@
  *   - Basketball  — NFHS / high-school spec (12ft lane, 19ft to FT line, 19'9" arc)
  *   - Tennis      — ITF spec (36 x 78 doubles, 27ft singles, 21ft service line)
  *
- * Pad sizes are GRIT's own. Their designer renders a 720x420 box at 12 px/ft,
- * which is exactly 60ft x 35ft — the standard residential slab they pour. Full
- * court switches to 7 px/ft => 103ft x 60ft. Those two constants are lifted
- * straight from courtdesigner.builtwithgrit.com and are the reason our courts
- * now match theirs.
+ * Pad sizes are GRIT's own, measured out of their designer's line art rather
+ * than guessed. Every sport renders into the same 720x420 box and only the
+ * scale changes, so all three pads share a 12:7 (1.714:1) aspect ratio:
+ *
+ *   sport                px/ft   pad (ft)      verified against their art
+ *   residential combo      12    60 x 35       court 44.00 x 20.00, kitchen 7.00 each side of net
+ *   full-court basketball   7    103 x 60      court 84.00 x 50.00, division line at midpoint
+ *   tennis                  8    90 x 52.5     court 78.00 x 36.00, singles 27.00, alley 4.50
+ *
+ * Those figures came from per-pixel analysis of pickleball-lines.png,
+ * basketball-lines-full-court.png and tennis-court-lines.png, converted at each
+ * sport's px/ft. They land on regulation to the hundredth of a foot, which is
+ * how we know the scales are real and not coincidence.
  */
 
 /** A concrete pad. `lengthFt` is the long axis (drawn horizontally). */
@@ -61,10 +69,14 @@ export const PADS: Record<PadId, PadSpec> = {
   },
   tennis: {
     id: 'tennis',
-    label: '60 × 120',
-    widthFt: 60,
-    lengthFt: 120,
-    note: 'Regulation tennis with full ITF run-off.',
+    label: '52.5 × 90',
+    widthFt: 52.5,
+    lengthFt: 90,
+    // Measured from their tennis line art at 8 px/ft: a regulation 78 x 36 court
+    // centred with 6ft behind each baseline and 8.25ft down each side. That is a
+    // compact residential enclosure — ITF tournament run-off is far deeper — but
+    // it is the slab GRIT actually draws, so it is the slab we draw.
+    note: 'Regulation 78′ × 36′ court on a compact residential enclosure.',
   },
 };
 
