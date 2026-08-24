@@ -99,3 +99,26 @@ describe('design system', () => {
     expect(hero).not.toContain('HeroToggle');
   });
 });
+
+/**
+ * There must be exactly one court renderer. The homepage previously shipped a
+ * separate pseudo-3D component built from CSS-transformed DOM planes, with its
+ * own invented colour list ("Coastal Teal", "Night Violet") that GRIT does not
+ * sell — so the court on the homepage was not the court on /design.
+ */
+describe('single court renderer', () => {
+  it('the CSS-3D duplicate and its fictional catalogue are gone', async () => {
+    const fs = await import('node:fs/promises');
+    for (const dead of ['components/court/court-3d.tsx', 'lib/configurator.ts']) {
+      await expect(fs.access(dead)).rejects.toThrow();
+    }
+  });
+
+  it('the homepage renders through the same engine as the designer', async () => {
+    const fs = await import('node:fs/promises');
+    const promo = await fs.readFile('components/home/designer-promo.tsx', 'utf8');
+    expect(promo).toContain('court-thumbnail');
+    // Swatches must come from the real acrylic chart, never a local list.
+    expect(promo).toContain('SURFACE_COLORS');
+  });
+});

@@ -3,6 +3,7 @@ import Image from 'next/image';
 import { VERIFIED } from '@/lib/verified';
 import { HomeHero } from '@/components/home/home-hero';
 import { TrustBand } from '@/components/home/trust-band';
+import { DesignerPromo } from '@/components/home/designer-promo';
 import { Reveal } from '@/components/ui/reveal';
 import { WhiteLink, OutlineLightLink, UnderlineLink } from '@/components/ui/buttons';
 import { FEATURED_SERVICES, INDEX_SERVICES, WORK, PROCESS, PULL_QUOTE, PHOTOS } from '@/lib/content';
@@ -89,6 +90,8 @@ export default function HomePage() {
           ))}
         </div>
       </section>
+
+      <DesignerPromo />
 
       {/* Signature previewer */}
       <section className="bg-slate-900 text-white">

@@ -1,29 +1,9 @@
 'use client';
 
-import { DEFAULT_CONFIG, type CourtConfig } from './configurator';
 import { DEFAULT_DESIGN, type DesignConfig } from './court-designer';
 
-/** Persists the in-progress court config across the /design → /preview hop. */
-const KEY = 'grit:court-config';
+/** Persists the in-progress court design across the /design → /planner → /preview hops. */
 const DESIGN_KEY = 'grit:court-design';
-
-export function saveConfig(config: CourtConfig): void {
-  try {
-    sessionStorage.setItem(KEY, JSON.stringify(config));
-  } catch {
-    /* ignore */
-  }
-}
-
-export function loadConfig(): CourtConfig {
-  try {
-    const raw = sessionStorage.getItem(KEY);
-    if (raw) return { ...DEFAULT_CONFIG, ...(JSON.parse(raw) as CourtConfig) };
-  } catch {
-    /* ignore */
-  }
-  return DEFAULT_CONFIG;
-}
 
 // ── New Court Designer (multi-sport, per-zone colors, logo) ──────────────────
 export function saveDesign(design: DesignConfig): void {
