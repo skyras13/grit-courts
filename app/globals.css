@@ -22,7 +22,7 @@
   body {
     margin: 0;
     background: var(--paper);
-    color: #1b2530;
+    color: var(--ink);
     font-family: var(--font-manrope), system-ui, sans-serif;
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
@@ -30,7 +30,12 @@
   }
   h1, h2, h3, h4 {
     font-family: var(--font-archivo), system-ui, sans-serif;
-    color: var(--ink);
+    /* `inherit`, not a fixed ink value. An element selector here beats an
+       inherited `text-white` from a dark parent section, which silently rendered
+       the h1 on every city page as dark ink on a navy gradient — 2.1:1 contrast,
+       below the 3:1 WCAG AA floor for large text. Inheriting means a heading
+       always takes the colour of the surface it sits on. */
+    color: inherit;
     letter-spacing: -0.025em;
     text-wrap: balance;
     margin: 0;

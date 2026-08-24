@@ -53,3 +53,19 @@ describe('page headings', () => {
     }
   });
 });
+
+/**
+ * Headings must inherit their colour from the surface they sit on. An element
+ * selector setting a fixed ink colour beats an inherited `text-white` from a
+ * dark parent, which rendered the h1 on all 23 city pages at 2.1:1 contrast —
+ * below the 3:1 WCAG AA floor for large text.
+ */
+describe('heading colour cascade', () => {
+  it('global heading rule inherits rather than pinning a fixed colour', async () => {
+    const fs = await import('node:fs/promises');
+    const css = await fs.readFile('app/globals.css', 'utf8');
+    const rule = css.match(/h1,\s*h2,\s*h3,\s*h4\s*\{[^}]*\}/)?.[0] ?? '';
+    expect(rule).toContain('color: inherit');
+    expect(rule).not.toMatch(/color:\s*var\(--ink\)/);
+  });
+});
