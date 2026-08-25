@@ -1,8 +1,9 @@
 'use client';
 
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { SECRET_LABELS, SECRET_KEYS, type SecretKey, type SiteContent } from '@/lib/cms/types';
 import type { SecretStatus } from '@/lib/cms/secrets';
+import { FilePicker } from '@/components/ui/file-picker';
 import { cn } from '@/lib/utils';
 
 type Tab = 'business' | 'home' | 'special' | 'pages' | 'services' | 'gallery' | 'faqs' | 'seo' | 'keys';
@@ -370,7 +371,6 @@ function ServicesTab({ c, update }: { c: SiteContent; update: Upd }) {
 }
 
 function GalleryTab({ c, setC }: { c: SiteContent; setC: (s: SiteContent) => void }) {
-  const fileRef = useRef<HTMLInputElement>(null);
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
   const [meta, setMeta] = useState({ city: '', sport: 'pickleball', colors: '', alt: '' });
@@ -424,23 +424,19 @@ function GalleryTab({ c, setC }: { c: SiteContent; setC: (s: SiteContent) => voi
         </Field>
         <Field label="Colours"><Text value={meta.colors} onChange={(v) => setMeta({ ...meta, colors: v })} placeholder="Competition Blue / Green" /></Field>
         <div className="flex items-end">
-          <button
-            onClick={() => fileRef.current?.click()}
+          <FilePicker
+            multiple
             disabled={busy}
-            className="w-full rounded-md bg-brand-600 px-4 py-2.5 text-[14px] font-bold text-white hover:bg-brand-700 disabled:opacity-40"
+            onFiles={(files) => upload(files)}
+            className={cn(
+              'block w-full cursor-pointer rounded-md bg-brand-600 px-4 py-2.5 text-center text-[14px] font-bold text-white hover:bg-brand-700',
+              busy && 'pointer-events-none opacity-40',
+            )}
           >
             {busy ? 'Uploading…' : 'Upload photos'}
-          </button>
+          </FilePicker>
         </div>
       </div>
-      <input
-        ref={fileRef}
-        type="file"
-        accept="image/*"
-        multiple
-        className="hidden"
-        onChange={(e) => e.target.files && upload(e.target.files)}
-      />
 
       {err && <p role="alert" className="mb-4 rounded-md bg-red-50 px-3 py-2 text-[13px] text-red-700">{err}</p>}
 

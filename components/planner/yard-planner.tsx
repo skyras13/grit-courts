@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { drawCourt, courtPixelSize } from '@/lib/court-canvas';
 import { PADS, PAD_ORDER } from '@/lib/court-geometry';
 import { LOGO_SRC, type DesignConfig } from '@/lib/court-designer';
+import { FilePicker } from '@/components/ui/file-picker';
 import { cn } from '@/lib/utils';
 
 /**
@@ -38,7 +39,6 @@ export function YardPlanner({
   onExport?: (dataUrl: string) => void;
 }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const fileRef = useRef<HTMLInputElement>(null);
   const imgRef = useRef<HTMLImageElement | null>(null);
   const courtRef = useRef<HTMLCanvasElement | null>(null);
   const logoRef = useRef<HTMLImageElement | null>(null);
@@ -50,7 +50,18 @@ export function YardPlanner({
   const [pxPerFt, setPxPerFt] = useState<number | null>(null);
   const [pos, setPos] = useState<Pt>({ x: CANVAS_W / 2, y: 450 });
   const [rot, setRot] = useState(0);
+  /**
+   * Gesture state lives in a ref, not React state. A pointermove can arrive
+   * before React has re-rendered from the pointerdown, and a state-based flag
+   * would still read false at that moment — dropping the first part of every
+   * drag. The `dragging` state below exists only to drive the cursor.
+   */
+  const draggingRef = useRef(false);
   const [dragging, setDragging] = useState(false);
+  const [overCourt, setOverCourt] = useState(false);
+  /** Offset from the pointer to the court centre at grab time, so the court
+   *  doesn't jump its centre to the cursor the moment you press. */
+  const grabRef = useRef<Pt | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const pad = PADS[design.pad];
@@ -173,34 +184,92 @@ export function YardPlanner({
     };
   }
 
+  /**
+   * Is the pointer inside the court? The court can be rotated, so the point is
+   * transformed into the court's own frame before the bounds check.
+   */
+  function hitCourt(p: Pt): boolean {
+    if (!pxPerFt) return false;
+    const w = pad.lengthFt * pxPerFt;
+    const h = pad.widthFt * pxPerFt;
+    const a = (-rot * Math.PI) / 180;
+    const dx = p.x - pos.x;
+    const dy = p.y - pos.y;
+    const lx = dx * Math.cos(a) - dy * Math.sin(a);
+    const ly = dx * Math.sin(a) + dy * Math.cos(a);
+    return Math.abs(lx) <= w / 2 && Math.abs(ly) <= h / 2;
+  }
+
+  /** Keep at least a corner of the court on screen so it can't be lost. */
+  function clamp(p: Pt): Pt {
+    const margin = 40;
+    return {
+      x: Math.min(Math.max(p.x, margin), CANVAS_W - margin),
+      y: Math.min(Math.max(p.y, margin), canvasH - margin),
+    };
+  }
+
+  /** Pointer capture is an enhancement; a failure must not abort the gesture. */
+  function capture(e: React.PointerEvent<HTMLCanvasElement>) {
+    try {
+      e.currentTarget.setPointerCapture(e.pointerId);
+    } catch {
+      /* pointer not active (synthetic event, or already captured) */
+    }
+  }
+
   function onPointerDown(e: React.PointerEvent<HTMLCanvasElement>) {
     const p = toCanvas(e);
+
+    // Calibrate is press-drag-release. It used to be click-then-click, but the
+    // move handler set the end point as soon as the mouse travelled, so the
+    // second click matched "already has both ends" and reset the line — the
+    // ruler could never be completed with a real mouse.
     if (mode === 'calibrate') {
-      if (!ruler.a || (ruler.a && ruler.b)) setRuler({ a: p, b: null });
-      else setRuler((r) => ({ ...r, b: p }));
+      capture(e);
+      setRuler({ a: p, b: p });
+      draggingRef.current = true;
+      setDragging(true);
       return;
     }
+
     if (mode === 'place') {
-      e.currentTarget.setPointerCapture(e.pointerId);
+      // Only grab the court itself; clicking bare ground shouldn't teleport it.
+      if (!hitCourt(p)) return;
+      capture(e);
+      grabRef.current = { x: pos.x - p.x, y: pos.y - p.y };
+      draggingRef.current = true;
       setDragging(true);
-      setPos(p);
     }
   }
 
   function onPointerMove(e: React.PointerEvent<HTMLCanvasElement>) {
     const p = toCanvas(e);
-    if (mode === 'calibrate' && ruler.a && !ruler.b) {
-      setRuler((r) => ({ ...r, b: p }));
+
+    if (mode === 'calibrate') {
+      if (draggingRef.current) setRuler((r) => ({ ...r, b: p }));
       return;
     }
-    if (dragging && mode === 'place') setPos(p);
+
+    if (mode === 'place') {
+      if (draggingRef.current && grabRef.current) {
+        setPos(clamp({ x: p.x + grabRef.current.x, y: p.y + grabRef.current.y }));
+      } else {
+        setOverCourt(hitCourt(p));
+      }
+    }
   }
 
   function onPointerUp(e: React.PointerEvent<HTMLCanvasElement>) {
-    if (dragging) {
+    if (!draggingRef.current) return;
+    draggingRef.current = false;
+    try {
       e.currentTarget.releasePointerCapture(e.pointerId);
-      setDragging(false);
+    } catch {
+      /* pointer already released */
     }
+    grabRef.current = null;
+    setDragging(false);
   }
 
   // ── Image loading ─────────────────────────────────────────────────────────
@@ -255,16 +324,6 @@ export function YardPlanner({
 
   return (
     <div>
-      <input
-        ref={fileRef}
-        type="file"
-        accept="image/*"
-        className="hidden"
-        onChange={(e) => {
-          const f = e.target.files?.[0];
-          if (f) handleFile(f);
-        }}
-      />
 
       {/* Step rail */}
       <ol className="mb-4 flex flex-wrap items-center gap-2 text-[13px] font-bold">
@@ -291,7 +350,18 @@ export function YardPlanner({
           onPointerMove={onPointerMove}
           onPointerUp={onPointerUp}
           className="block h-auto w-full touch-none"
-          style={{ cursor: mode === 'place' ? 'move' : mode === 'calibrate' ? 'crosshair' : 'default' }}
+          style={{
+            cursor:
+              mode === 'calibrate'
+                ? 'crosshair'
+                : mode === 'place'
+                  ? dragging
+                    ? 'grabbing'
+                    : overCourt
+                      ? 'grab'
+                      : 'default'
+                  : 'default',
+          }}
         />
 
         {mode === 'upload' && (
@@ -302,12 +372,12 @@ export function YardPlanner({
               works just as well — zoom in until the yard fills the screen.
             </p>
             <div className="flex flex-wrap justify-center gap-3">
-              <button
-                onClick={() => fileRef.current?.click()}
-                className="rounded-full bg-brand-600 px-6 py-3 text-[14px] font-bold text-white hover:bg-brand-700"
+              <FilePicker
+                onFiles={(files) => handleFile(files[0]!)}
+                className="cursor-pointer rounded-full bg-brand-600 px-6 py-3 text-[14px] font-bold text-white hover:bg-brand-700"
               >
                 Upload aerial photo
-              </button>
+              </FilePicker>
               <button
                 onClick={() => loadImage('/samples/yard-aerial.jpg')}
                 className="rounded-full border border-white/25 px-6 py-3 text-[14px] font-bold text-white/90 hover:bg-white/10"

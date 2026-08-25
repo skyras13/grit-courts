@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
 import { useEstimate } from '@/components/estimate/estimate-provider';
@@ -23,6 +23,7 @@ import {
   type Sport,
   type ZoneKey,
 } from '@/lib/court-designer';
+import { FilePicker } from '@/components/ui/file-picker';
 import { cn } from '@/lib/utils';
 
 // Three.js viewport is client-only + heavy → lazy load, no SSR.
@@ -45,7 +46,6 @@ export function CourtDesignerUI() {
   const router = useRouter();
   const { open } = useEstimate();
   const [design, setDesign] = useState<DesignConfig>(DEFAULT_DESIGN);
-  const fileRef = useRef<HTMLInputElement>(null);
 
   const zones = zonesFor(design);
   const pads = padsFor(design.sport, design.size === 'full');
@@ -66,9 +66,7 @@ export function CourtDesignerUI() {
   const setLogo = (logo: LogoKey) => setDesign((d) => ({ ...d, logo }));
   const setLogoPos = (logoPos: LogoPos) => setDesign((d) => ({ ...d, logoPos }));
 
-  function onUploadLogo(e: React.ChangeEvent<HTMLInputElement>) {
-    const f = e.target.files?.[0];
-    if (!f) return;
+  function onUploadLogo(f: File) {
     const url = URL.createObjectURL(f);
     setDesign((d) => ({ ...d, logo: 'custom', customLogoUrl: url }));
   }
@@ -181,22 +179,21 @@ export function CourtDesignerUI() {
                 {l.label}
               </Pill>
             ))}
-            <button
-              onClick={() => fileRef.current?.click()}
+            <FilePicker
+              onFiles={(files) => onUploadLogo(files[0]!)}
               className={cn(
-                'rounded-md border-[1.5px] px-3 py-2 text-[13px] font-bold transition',
+                'cursor-pointer rounded-md border-[1.5px] px-3 py-2 text-[13px] font-bold transition',
                 design.logo === 'custom' ? 'border-brand-600 bg-brand-50 text-brand-600' : 'border-muted-input bg-white text-[#3a4651] hover:border-brand-300',
               )}
             >
               Upload Logo
-            </button>
+            </FilePicker>
             {design.logo !== 'none' && (
               <button onClick={clearLogo} className="rounded-md px-3 py-2 text-[13px] font-bold text-muted-faint hover:text-ink">
                 Clear
               </button>
             )}
           </div>
-          <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={onUploadLogo} />
           {design.logo !== 'none' && (
             <div className="mt-3">
               <div className="mb-1.5 text-[11.5px] font-bold uppercase tracking-wide text-muted-faint">Position</div>

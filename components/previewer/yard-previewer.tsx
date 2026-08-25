@@ -1,8 +1,9 @@
 'use client';
 
 import Link from 'next/link';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { BeforeAfter } from '@/components/ui/before-after';
+import { FilePicker } from '@/components/ui/file-picker';
 import { CourtThumbnail } from '@/components/court/court-thumbnail';
 import { useEstimate } from '@/components/estimate/estimate-provider';
 import { loadDesign } from '@/lib/config-store';
@@ -22,7 +23,6 @@ export function YardPreviewer() {
   const [aiUrl, setAiUrl] = useState<string | null>(null);
   const [view, setView] = useState<'natural' | 'aerial'>('natural');
   const [error, setError] = useState<string | null>(null);
-  const fileRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => setDesign(loadDesign()), []);
 
@@ -45,7 +45,6 @@ export function YardPreviewer() {
     }
   }
 
-  const pickFile = () => consent && fileRef.current?.click();
   function reset() { setImg(null); setBlob(null); setAiUrl(null); setPhase('idle'); }
 
   async function generateAI() {
@@ -79,20 +78,20 @@ export function YardPreviewer() {
 
   return (
     <div>
-      <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={(e) => { const f = e.target.files?.[0]; if (f) void handleFile(f); }} />
 
       <div className="relative overflow-hidden rounded-xl shadow-lift" style={{ aspectRatio: '16 / 9', background: 'linear-gradient(165deg,#16293c,#0d1d2e)' }}>
         {/* IDLE */}
         {phase === 'idle' && (
+          <FilePicker
+            disabled={!consent}
+            onFiles={(files) => void handleFile(files[0]!)}
+            className="absolute inset-0 m-3.5 flex flex-col items-center justify-center gap-3.5 rounded-[10px] border-2 border-dashed p-8 text-center"
+          >
           <div
-            role="button"
-            tabIndex={0}
-            onClick={pickFile}
-            onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && pickFile()}
             onDrop={(e) => { e.preventDefault(); const f = e.dataTransfer.files?.[0]; if (f && consent) void handleFile(f); }}
             onDragOver={(e) => e.preventDefault()}
-            className="absolute inset-0 m-3.5 flex flex-col items-center justify-center gap-3.5 rounded-[10px] border-2 border-dashed p-8 text-center"
-            style={{ cursor: consent ? 'pointer' : 'default', borderColor: consent ? '#2b598a' : 'rgba(255,255,255,0.22)' }}
+            className="flex flex-col items-center justify-center gap-3.5"
+            style={{ cursor: consent ? 'pointer' : 'default' }}
           >
             <div className="flex h-[54px] w-[54px] items-center justify-center rounded-[14px] bg-[rgba(127,178,221,0.16)]">
               <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#7fb2dd" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="17 8 12 3 7 8" /><line x1="12" y1="3" x2="12" y2="15" /></svg>
@@ -100,6 +99,7 @@ export function YardPreviewer() {
             <div className="font-display text-[20px] font-bold text-white">Drag a backyard photo here</div>
             <div className="text-[14px] text-[#9fb0bf]">or <span className="text-sky-accent underline">browse your files</span> — a wide shot of the open space works best</div>
           </div>
+          </FilePicker>
         )}
 
         {/* READY: photo + your-design chip + generate */}
