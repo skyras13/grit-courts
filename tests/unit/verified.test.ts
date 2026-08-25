@@ -122,3 +122,27 @@ describe('single court renderer', () => {
     expect(promo).toContain('SURFACE_COLORS');
   });
 });
+
+/**
+ * Shared chrome is the easiest place for an unverified claim to survive a sweep:
+ * the footer kept an "HBA member" line and a prices disclaimer long after both
+ * were gated everywhere else.
+ */
+describe('header and footer carry no ungated claims', () => {
+  it('footer memberships and price disclaimer sit behind VERIFIED', async () => {
+    const fs = await import('node:fs/promises');
+    const footer = await fs.readFile('components/site/footer.tsx', 'utf8');
+    for (const claim of ['Home Builders Association member', 'Prices shown are estimates']) {
+      const idx = footer.indexOf(claim);
+      expect(idx, `"${claim}" must exist only inside a VERIFIED guard`).toBeGreaterThan(-1);
+      // The guard must appear within the same JSX block, just above the claim.
+      expect(footer.slice(Math.max(0, idx - 220), idx)).toContain('VERIFIED.');
+    }
+  });
+
+  it('does not hardcode a copyright year', async () => {
+    const fs = await import('node:fs/promises');
+    const footer = await fs.readFile('components/site/footer.tsx', 'utf8');
+    expect(footer).toContain('getFullYear()');
+  });
+});

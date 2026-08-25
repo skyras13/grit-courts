@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { Wordmark } from '@/components/brand/logo';
+import { VERIFIED } from '@/lib/verified';
 import { COMPANY } from '@/lib/site';
 
 const COLS: { title: string; links: { label: string; href: string }[] }[] = [
@@ -68,8 +69,13 @@ export function Footer() {
       </div>
 
       <div className="mx-auto mt-9 flex max-w-content flex-wrap justify-between gap-3 border-t border-white/10 pt-5 text-[12.5px] text-[#6c7884]">
-        <span>© 2026 {COMPANY.legalName} · Home Builders Association member</span>
-        <span>Prices shown are estimates, not quotes — confirmed on a free on-site visit.</span>
+        <span>
+          © {new Date().getFullYear()} {COMPANY.legalName}
+          {VERIFIED.memberships && ' · Home Builders Association member'}
+        </span>
+        {VERIFIED.prices && (
+          <span>Prices shown are estimates, not quotes — confirmed on a free on-site visit.</span>
+        )}
       </div>
     </footer>
   );
